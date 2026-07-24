@@ -59,4 +59,20 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Rol::class); //se especifica el id de la tabla usuarios para que sepa que campo comparar
     }
+
+    /**
+     * Relación: Un usuario/cliente tiene muchas ventas.
+     */
+    public function ventas()
+    {
+        return $this->hasMany(Venta::class, 'cliente_id');
+    }
+
+    /**
+     * Relación: Un usuario/cliente tiene muchas devoluciones a través de sus ventas.
+     */
+    public function devoluciones()
+    {
+        return $this->hasManyThrough(Devolucion::class, Venta::class, 'cliente_id', 'venta_id', 'id', 'id');
+    }
 }

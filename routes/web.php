@@ -13,7 +13,9 @@ use App\Http\Controllers\VentaController;
 use App\Http\Controllers\DevolucionController;
 use App\Http\Controllers\CajaController;
 use App\Http\Controllers\InventarioController;
+use App\Http\Controllers\ClienteController;
 use App\Models\Producto;
+
 
 
 
@@ -111,6 +113,23 @@ Route::post('/caja/movimiento', [CajaController::class, 'registrarMovimiento'])
 Route::get('/inventario', [InventarioController::class, 'index'])
     ->middleware('auth')
     ->name('inventario.index');
+
+Route::get('/clientes', [ClienteController::class, 'index'])
+    ->middleware('auth')
+    ->name('clientes.index');
+
+Route::patch('/clientes/{cliente}/toggle-estado', [ClienteController::class, 'toggleEstado'])
+    ->middleware('auth')
+    ->name('clientes.toggle-estado');
+
+Route::get('/clientes/{cliente}/compras', [ClienteController::class, 'compras'])
+    ->middleware('auth')
+    ->name('clientes.compras');
+
+Route::get('/clientes/{cliente}/devoluciones', [ClienteController::class, 'devoluciones'])
+    ->middleware('auth')
+    ->name('clientes.devoluciones');
+
 
 
 
