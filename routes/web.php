@@ -14,14 +14,10 @@ use App\Http\Controllers\DevolucionController;
 use App\Http\Controllers\CajaController;
 use App\Http\Controllers\InventarioController;
 use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\ReporteController;
 use App\Models\Producto;
-
-
-
-
-
-
-
+use App\Models\Venta;
+use App\Models\Devolucion;
 
 
 Route::get('/', function () {
@@ -37,7 +33,12 @@ Route::get('/dashboard', function () {
             'totalClientes' => User::where('rol_id', 3)->count(),
             'clientesActivos' => User::where('rol_id', 3)->where('estado', 'Activo')->count(),
             'totalProductos' => Producto::count(),
-
+            'productosActivos' => Producto::where('estado', 'Activo')->count(),
+            'ventasHoy' => Venta::whereDate('fecha', today())->where('estado', 'Completada')->sum('total'),
+            'ventasHoyCount' => Venta::whereDate('fecha', today())->where('estado', 'Completada')->count(),
+            'ingresosMes' => Venta::whereMonth('fecha', today()->month)->whereYear('fecha', today()->year)->where('estado', 'Completada')->sum('total'),
+            'ingresosMesCount' => Venta::whereMonth('fecha', today()->month)->whereYear('fecha', today()->year)->where('estado', 'Completada')->count(),
+            'devolucionesPendientes' => Devolucion::where('estado', 'Pendiente')->count(),
         ]),
         2 => view('empleado.dashboard'),
         3 => view('cliente.dashboard'),
@@ -129,6 +130,19 @@ Route::get('/clientes/{cliente}/compras', [ClienteController::class, 'compras'])
 Route::get('/clientes/{cliente}/devoluciones', [ClienteController::class, 'devoluciones'])
     ->middleware('auth')
     ->name('clientes.devoluciones');
+
+Route::get('/reportes', [ReporteController::class, 'index'])
+    ->middleware('auth')
+    ->name('reportes.index');
+
+Route::get('/reportes/exportar/pdf', [ReporteController::class, 'exportarPdf'])
+    ->middleware('auth')
+    ->name('reportes.exportar.pdf');
+
+Route::get('/reportes/exportar/excel', [ReporteController::class, 'exportarExcel'])
+    ->middleware('auth')
+    ->name('reportes.exportar.excel');
+
 
 
 
