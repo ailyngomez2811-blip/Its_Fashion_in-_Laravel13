@@ -29,24 +29,24 @@ class UsuarioController extends Controller
      * Listar usuarios internos (Administrador y Empleado, rol_id 1 y 2).
      * Los Clientes (rol_id 3) no se gestionan aquí.
      */
-    public function index(): View
+    public function index(): View //la funcion index es para mostrar todos los usuarios de la tabla usuarios
     {
         $users = User::whereIn('rol_id', [1, 2])
-            ->with('rol')
-            ->orderByDesc('fecha_registro')
-            ->get();
+            ->with('rol') //se incluye el modelo rol para obtener el nombre del rol
+            ->orderByDesc('fecha_registro') //se ordenan los usuarios por fecha de registro en orden descendente
+            ->get(); //se obtiene todos los usuarios  
 
-        $roles = $this->rolesAsignables();
+        $roles = $this->rolesAsignables(); //se obtiene todos los roles asignables
 
-        return view('admin.usuarios', compact('users', 'roles'));
+        return view('admin.usuarios', compact('users', 'roles')); //se retorna la vista admin.usuarios con los usuarios y roles
     }
 
     /**
      * Crear un nuevo usuario interno (Administrador o Empleado, según se elija).
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request): RedirectResponse //la funcion store es para crear un nuevo usuario
     {
-        $rolesPermitidos = $this->rolesAsignables()->pluck('id');
+        $rolesPermitidos = $this->rolesAsignables()->pluck('id'); //se obtienen los roles asignables
 
         $request->validate([
             'nombre' => ['required', 'string', 'max:100'],
@@ -59,15 +59,15 @@ class UsuarioController extends Controller
             'rol_id' => ['required', Rule::in($rolesPermitidos)],
         ]);
 
-        User::create([
+        User::create([ // esta funcion es para guardar los datos del nuevo usuario en la tabla usuarios
             'nombre' => $request->nombre,
             'apellido' => $request->apellido,
             'username' => $request->username,
             'email' => $request->email,
             'telefono' => $request->telefono,
-            'password' => Hash::make($request->password),
-            'rol_id' => $request->rol_id,
-            'estado' => $request->estado,
+            'password' => Hash::make($request->password), //se hashea la contraseña
+            'rol_id' => $request->rol_id, //se asigna el rol
+            'estado' => $request->estado, //se asigna el estado
         ]);
 
         return redirect()->route('usuarios.index')
@@ -78,12 +78,12 @@ class UsuarioController extends Controller
      * Actualizar un usuario interno existente.
      * La contraseña solo se actualiza si se envía un valor nuevo.
      */
-    public function update(Request $request, User $usuario): RedirectResponse
+    public function update(Request $request, User $usuario): RedirectResponse //la funcion update es para actualizar los datos de un usuario existente
     {
-        $rolesPermitidos = $this->rolesAsignables()->pluck('id');
+        $rolesPermitidos = $this->rolesAsignables()->pluck('id'); //se obtienen los roles asignables
 
         $request->validate([
-            'nombre' => ['required', 'string', 'max:100'],
+            'nombre' => ['required', 'string', 'max:100'], //se valida el nombre
             'apellido' => ['required', 'string', 'max:100'],
             'username' => ['required', 'string', 'max:50', Rule::unique('users', 'username')->ignore($usuario->id)],
             'email' => ['required', 'string', 'email', 'max:100', Rule::unique('users', 'email')->ignore($usuario->id)],
@@ -93,15 +93,15 @@ class UsuarioController extends Controller
             'rol_id' => ['required', Rule::in($rolesPermitidos)],
         ]);
 
-        $usuario->nombre = $request->nombre;
-        $usuario->apellido = $request->apellido;
-        $usuario->username = $request->username;
-        $usuario->email = $request->email;
-        $usuario->telefono = $request->telefono;
-        $usuario->estado = $request->estado;
-        $usuario->rol_id = $request->rol_id;
+        $usuario->nombre = $request->nombre; //se actualiza el nombre
+        $usuario->apellido = $request->apellido; //se actualiza el apellido
+        $usuario->username = $request->username; //se actualiza el username
+        $usuario->email = $request->email; //se actualiza el email
+        $usuario->telefono = $request->telefono; //se actualiza el telefono
+        $usuario->estado = $request->estado; //se actualiza el estado
+        $usuario->rol_id = $request->rol_id; //se actualiza el rol
 
-        if ($request->filled('password')) {
+        if ($request->filled('password')) { //se hashea la contraseña si se envia un valor nuevo
             $usuario->password = Hash::make($request->password);
         }
 
@@ -112,16 +112,15 @@ class UsuarioController extends Controller
     }
 
     /**
-     * Activar / desactivar un usuario (llamado vía fetch desde la tabla).
-     */
-    public function toggleEstado(Request $request, User $usuario): JsonResponse
+     * Activar / desactivar un usuario (llamado vía fetch desde la tabla). */
+    public function toggleEstado(Request $request, User $usuario): JsonResponse //la funcion toggleEstado es para activar o desactivar un usuario
     {
         $request->validate([
-            'estado' => ['required', Rule::in(['Activo', 'Inactivo'])],
+            'estado' => ['required', Rule::in(['Activo', 'Inactivo'])], //se valida el estado
         ]);
 
-        $usuario->update(['estado' => $request->estado]);
+        $usuario->update(['estado' => $request->estado]); //se actualiza el estado del usuario
 
-        return response()->json(['ok' => true, 'estado' => $usuario->estado]);
+        return response()->json(['ok' => true, 'estado' => $usuario->estado]); //se retorna el estado del usuario
     }
 }

@@ -9,15 +9,12 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
-
-    // No hace falta declarar $table: "users" ya es el nombre por defecto.
+    use HasFactory, Notifiable; //se importa el modelo
 
     /**
      * The attributes that are mass assignable.
      *
-     * @var list<string>
+     * @var list<string> //atributos de la tabla que se pueden modificar
      */
     protected $fillable = [
         'nombre',
@@ -34,24 +31,24 @@ class User extends Authenticatable
     /**
      * The attributes that should be hidden for serialization.
      *
-     * @var list<string>
+     * @var list<string> //atributos que se ocultan
      */
     protected $hidden = [
-        'password',
-        'remember_token',
+        'password', //se oculta la contraseña
+        'remember_token', //se oculta el token
     ];
 
     /**
      * Get the attributes that should be cast.
      *
-     * @return array<string, string>
+     * @return array<string, string> //atributos que se transforman
      */
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
-            'fecha_registro' => 'datetime',
-            'password' => 'hashed',
+            'email_verified_at' => 'datetime', //se transforma a datetime
+            'fecha_registro' => 'datetime', //se transforma a datetime
+            'password' => 'hashed', //se transforma a hashed
         ];
     }
 
@@ -60,6 +57,6 @@ class User extends Authenticatable
      */
     public function rol()
     {
-        return $this->belongsTo(Rol::class);
+        return $this->belongsTo(Rol::class); //se especifica el id de la tabla usuarios para que sepa que campo comparar
     }
 }

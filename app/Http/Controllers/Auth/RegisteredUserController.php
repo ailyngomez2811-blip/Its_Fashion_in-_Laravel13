@@ -14,26 +14,21 @@ use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
 {
-    /**
-     * Display the registration view.
-     */
+    //la funcion create es para mostrar la vista de registro
     public function create(): View
-    {
-        return view('auth.register');
+    { //esta funcion es para mostrar la vista de registro
+        return view('auth.register'); //se retorna la vista de registro
     }
 
-    /**
-     * Handle an incoming registration request.
-     *
-     * @throws \Illuminate\Validation\ValidationException
-     */
-    public function store(Request $request): RedirectResponse
-    {
+    // Handle an incoming registration request. //la funcion store es para guardar los datos del nuevo usuario
+    public function store(Request $request): RedirectResponse //esta funcion es para guardar los datos del nuevo usuario
+    { 
         $request->validate([
+            //se valida que los campos no esten vacios
+            //se valida que el username sea unico en la tabla users
             'nombre' => 'required|string|max:100',
             'apellido' => 'required|string|max:100',
-            // "documento" llega del formulario, pero se guarda en la columna "username"
-            'documento' => 'required|string|max:20|unique:users,username',
+            'username' => 'required|string|max:20|unique:users,username',
             'telefono' => 'required|string|max:15',
             'email' => 'required|string|lowercase|email|max:100|unique:'.User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
@@ -45,7 +40,7 @@ class RegisteredUserController extends Controller
         $user = User::create([
             'nombre' => $request->nombre,
             'apellido' => $request->apellido,
-            'username' => $request->documento,
+            'username' => $request->username,
             'telefono' => $request->telefono,
             'email' => $request->email,
             'password' => Hash::make($request->password),

@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
     <link rel="icon" href="{{ asset('img/icono head .png') }}" type="image/png">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
         tailwind.config = {
@@ -348,7 +349,20 @@
             showError(@json($errors->first()));
         @endif
         @if (session('status'))
-            showSuccess(@json(session('status')));
+            document.addEventListener('DOMContentLoaded', function() {
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Registro exitoso!',
+                    text: @json(session('status')),
+                    confirmButtonColor: '#2563eb',
+                    confirmButtonText: 'Iniciar sesión',
+                    customClass: {
+                        confirmButton: 'font-sans rounded-xl',
+                        popup: 'font-sans rounded-3xl',
+                        title: 'font-serif text-brand-dark',
+                    }
+                });
+            });
         @endif
     </script>
 </body>
