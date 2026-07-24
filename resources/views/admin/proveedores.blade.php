@@ -193,8 +193,8 @@
                         class="w-full px-4 py-2.5 bg-slate-50 border-2 border-slate-200 rounded-xl text-sm text-slate-700 focus:outline-none transition">
                 </div>
                 <div>
-                    <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Documento *</label>
-                    <input type="text" name="documento" id="prov-doc" required placeholder="NIT o cédula"
+                    <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Documento</label>
+                    <input type="text" name="documento" id="prov-doc" placeholder="NIT o cédula"
                         class="w-full px-4 py-2.5 bg-slate-50 border-2 border-slate-200 rounded-xl text-sm text-slate-700 focus:outline-none transition">
                 </div>
                 <div>

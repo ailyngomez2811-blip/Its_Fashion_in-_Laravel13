@@ -8,7 +8,17 @@ use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\ProveedorController;
+use App\Http\Controllers\CompraController;
+use App\Http\Controllers\VentaController;
+use App\Http\Controllers\DevolucionController;
+use App\Http\Controllers\CajaController;
+use App\Http\Controllers\InventarioController;
 use App\Models\Producto;
+
+
+
+
+
 
 
 
@@ -60,5 +70,51 @@ Route::patch('/productos/{producto}/toggle-estado', [ProductoController::class, 
 
 Route::resource('proveedores', ProveedorController::class)
     ->middleware('auth');
+
+Route::resource('compras', CompraController::class)
+    ->middleware('auth');
+
+Route::get('/ventas/buscar-cliente', [VentaController::class, 'buscarCliente'])
+    ->middleware('auth')
+    ->name('ventas.buscar-cliente');
+
+Route::resource('ventas', VentaController::class)
+    ->middleware('auth');
+
+Route::post('/devoluciones/{devolucion}/aprobar', [DevolucionController::class, 'aprobar'])
+    ->middleware('auth')
+    ->name('devoluciones.aprobar');
+
+Route::post('/devoluciones/{devolucion}/rechazar', [DevolucionController::class, 'rechazar'])
+    ->middleware('auth')
+    ->name('devoluciones.rechazar');
+
+Route::resource('devoluciones', DevolucionController::class)
+    ->middleware('auth');
+
+Route::get('/caja', [CajaController::class, 'index'])
+    ->middleware('auth')
+    ->name('caja.index');
+
+Route::post('/caja/abrir', [CajaController::class, 'abrir'])
+    ->middleware('auth')
+    ->name('caja.abrir');
+
+Route::post('/caja/cerrar', [CajaController::class, 'cerrar'])
+    ->middleware('auth')
+    ->name('caja.cerrar');
+
+Route::post('/caja/movimiento', [CajaController::class, 'registrarMovimiento'])
+    ->middleware('auth')
+    ->name('caja.movimiento');
+
+Route::get('/inventario', [InventarioController::class, 'index'])
+    ->middleware('auth')
+    ->name('inventario.index');
+
+
+
+
+
 
 

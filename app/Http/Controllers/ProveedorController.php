@@ -35,12 +35,11 @@ class ProveedorController extends Controller
             'telefono' => ['required', 'string', 'max:15'],
             'email' => ['nullable', 'email', 'max:100'],
             'direccion' => ['nullable', 'string', 'max:200'],
-            'documento' => ['required', 'string', 'max:20', 'unique:proveedores,documento'],
+            'documento' => ['nullable', 'string', 'max:20', 'unique:proveedores,documento'],
         ], [
             'nombre.required' => 'El nombre es obligatorio.',
             'contacto.required' => 'El nombre del contacto es obligatorio.',
             'telefono.required' => 'El teléfono es obligatorio.',
-            'documento.required' => 'El documento es obligatorio.',
             'documento.unique' => 'Ya existe un proveedor registrado con ese documento.',
             'email.email' => 'Por favor introduce un correo electrónico válido.',
         ]);
@@ -51,7 +50,7 @@ class ProveedorController extends Controller
             'telefono' => trim($request->telefono),
             'email' => $request->email ? trim($request->email) : null,
             'direccion' => $request->direccion ? trim($request->direccion) : null,
-            'documento' => trim($request->documento),
+            'documento' => $request->documento ? trim($request->documento) : null,
         ]);
 
         return redirect()->route('proveedores.index')
@@ -80,12 +79,11 @@ class ProveedorController extends Controller
             'telefono' => ['required', 'string', 'max:15'],
             'email' => ['nullable', 'email', 'max:100'],
             'direccion' => ['nullable', 'string', 'max:200'],
-            'documento' => ['required', 'string', 'max:20', Rule::unique('proveedores', 'documento')->ignore($proveedor->id)],
+            'documento' => ['nullable', 'string', 'max:20', Rule::unique('proveedores', 'documento')->ignore($proveedor->id)],
         ], [
             'nombre.required' => 'El nombre es obligatorio.',
             'contacto.required' => 'El nombre del contacto es obligatorio.',
             'telefono.required' => 'El teléfono es obligatorio.',
-            'documento.required' => 'El documento es obligatorio.',
             'documento.unique' => 'Ya existe un proveedor registrado con ese documento.',
             'email.email' => 'Por favor introduce un correo electrónico válido.',
         ]);
@@ -96,7 +94,7 @@ class ProveedorController extends Controller
             'telefono' => trim($request->telefono),
             'email' => $request->email ? trim($request->email) : null,
             'direccion' => $request->direccion ? trim($request->direccion) : null,
-            'documento' => trim($request->documento),
+            'documento' => $request->documento ? trim($request->documento) : null,
         ]);
 
         return redirect()->route('proveedores.index')

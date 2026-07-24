@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('telefono', 15);
             $table->string('email', 100)->nullable();
             $table->string('direccion', 200)->nullable();
-            $table->string('documento', 20)->unique();
+            $table->string('documento', 20)->nullable()->unique();
 
             // FECHAS
             $table->timestamps();

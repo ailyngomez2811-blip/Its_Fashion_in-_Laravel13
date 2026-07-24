@@ -178,25 +178,25 @@
 
                         <li class="nav-header">Operaciones</li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="{{ route('ventas.index') }}" class="nav-link {{ request()->routeIs('ventas.*') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-shopping-cart"></i>
                                 <p>Ventas</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="{{ route('compras.index') }}" class="nav-link {{ request()->routeIs('compras.*') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-truck"></i>
                                 <p>Abastecimiento</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="{{ route('inventario.index') }}" class="nav-link {{ request()->routeIs('inventario.index') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-warehouse"></i>
                                 <p>Inventario</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="{{ route('devoluciones.index') }}" class="nav-link {{ request()->routeIs('devoluciones.*') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-undo-alt"></i>
                                 <p>Devoluciones</p>
                             </a>
@@ -210,7 +210,7 @@
 
                         @if (auth()->user()->rol_id === 1)
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="{{ route('caja.index') }}" class="nav-link {{ request()->routeIs('caja.*') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-cash-register"></i>
                                 <p>Caja</p>
                             </a>
