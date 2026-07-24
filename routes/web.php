@@ -6,6 +6,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\CategoriaController;
+use App\Http\Controllers\ProductoController;
+use App\Http\Controllers\ProveedorController;
+use App\Models\Producto;
+
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -19,7 +24,8 @@ Route::get('/dashboard', function () {
         1 => view('admin.dashboard', [
             'totalClientes' => User::where('rol_id', 3)->count(),
             'clientesActivos' => User::where('rol_id', 3)->where('estado', 'Activo')->count(),
-            'totalProductos' => 0, // pendiente: módulo de productos
+            'totalProductos' => Producto::count(),
+
         ]),
         2 => view('empleado.dashboard'),
         3 => view('cliente.dashboard'),
@@ -44,3 +50,15 @@ Route::middleware('auth')->group(function () {
 
 Route::resource('categorias', CategoriaController::class)
     ->middleware('auth');
+
+Route::resource('productos', ProductoController::class)
+    ->middleware('auth');
+
+Route::patch('/productos/{producto}/toggle-estado', [ProductoController::class, 'toggleEstado'])
+    ->middleware('auth')
+    ->name('productos.toggle-estado');
+
+Route::resource('proveedores', ProveedorController::class)
+    ->middleware('auth');
+
+
