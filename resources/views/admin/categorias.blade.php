@@ -143,7 +143,7 @@
                         <tr>
                             <td colspan="3" class="px-6 py-16 text-center text-slate-400">
                                 <i class="fas fa-tags text-4xl mb-3 block opacity-20"></i>
-                                <p class="text-sm">No hay categorías registradas aún</p>
+                                <p class="text-sm">No hay categorías registradas</p>
                             </td>
                         </tr>
                     @endforelse
