@@ -30,21 +30,36 @@ Route::get('/dashboard', function () {
 
     return match ((int) $user->rol_id) {
         1 => view('admin.dashboard', [
-            'totalClientes' => User::where('rol_id', 3)->count(),
-            'clientesActivos' => User::where('rol_id', 3)->where('estado', 'Activo')->count(),
-            'totalProductos' => Producto::count(),
-            'productosActivos' => Producto::where('estado', 'Activo')->count(),
-            'ventasHoy' => Venta::whereDate('fecha', today())->where('estado', 'Completada')->sum('total'),
-            'ventasHoyCount' => Venta::whereDate('fecha', today())->where('estado', 'Completada')->count(),
-            'ingresosMes' => Venta::whereMonth('fecha', today()->month)->whereYear('fecha', today()->year)->where('estado', 'Completada')->sum('total'),
-            'ingresosMesCount' => Venta::whereMonth('fecha', today()->month)->whereYear('fecha', today()->year)->where('estado', 'Completada')->count(),
+            'totalClientes'          => User::where('rol_id', 3)->count(),
+            'clientesActivos'        => User::where('rol_id', 3)->where('estado', 'Activo')->count(),
+            'totalProductos'         => Producto::count(),
+            'productosActivos'       => Producto::where('estado', 'Activo')->count(),
+            'ventasHoy'              => Venta::whereDate('fecha', today())->where('estado', 'Completada')->sum('total'),
+            'ventasHoyCount'         => Venta::whereDate('fecha', today())->where('estado', 'Completada')->count(),
+            'ingresosMes'            => Venta::whereMonth('fecha', today()->month)->whereYear('fecha', today()->year)->where('estado', 'Completada')->sum('total'),
+            'ingresosMesCount'       => Venta::whereMonth('fecha', today()->month)->whereYear('fecha', today()->year)->where('estado', 'Completada')->count(),
             'devolucionesPendientes' => Devolucion::where('estado', 'Pendiente')->count(),
         ]),
-        2 => view('empleado.dashboard'),
-        3 => view('cliente.dashboard'),
+        2 => view('empleado.dashboard', [
+            'ventasHoy'              => Venta::whereDate('fecha', today())->where('estado', 'Completada')->sum('total'),
+            'ventasHoyCount'         => Venta::whereDate('fecha', today())->where('estado', 'Completada')->count(),
+            'ingresosMes'            => Venta::whereMonth('fecha', today()->month)->whereYear('fecha', today()->year)->where('estado', 'Completada')->sum('total'),
+            'ingresosMesCount'       => Venta::whereMonth('fecha', today()->month)->whereYear('fecha', today()->year)->where('estado', 'Completada')->count(),
+            'devolucionesPendientes' => Devolucion::where('estado', 'Pendiente')->count(),
+            'productosActivos'       => Producto::where('estado', 'Activo')->count(),
+            'productosCriticos'      => Producto::where('estado', 'Activo')->whereColumn('stock', '<=', 'stock_minimo')->count(),
+        ]),
+        3 => view('cliente.dashboard', [
+            'misVentas'          => Venta::where('user_id', $user->id)->where('estado', 'Completada')->latest('fecha')->take(5)->get(),
+            'totalCompras'       => Venta::where('user_id', $user->id)->where('estado', 'Completada')->count(),
+            'totalGastado'       => Venta::where('user_id', $user->id)->where('estado', 'Completada')->sum('total'),
+            'misDevoluciones'    => Devolucion::whereHas('venta', fn($q) => $q->where('user_id', $user->id))->latest('fecha')->take(5)->get(),
+            'totalDevoluciones'  => Devolucion::whereHas('venta', fn($q) => $q->where('user_id', $user->id))->count(),
+        ]),
         default => abort(403),
     };
 })->middleware(['auth', 'verified'])->name('dashboard');
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
