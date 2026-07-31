@@ -201,7 +201,13 @@
                     </tr>
                     @endforelse
                 </tbody>
-            </table>
+            <div id="pagination" class="px-6 py-4 border-t border-slate-100 flex items-center justify-between flex-wrap gap-2 bg-slate-50/50">
+                <span class="text-xs text-slate-500 font-medium" id="page-info">Mostrando registros 1-10</span>
+                <div class="flex items-center gap-2">
+                    <button onclick="prevPage()" id="btn-prev" class="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-slate-600 text-xs font-semibold hover:bg-slate-50 disabled:opacity-50 transition">Anterior</button>
+                    <button onclick="nextPage()" id="btn-next" class="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-slate-600 text-xs font-semibold hover:bg-slate-50 disabled:opacity-50 transition">Siguiente</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -315,11 +321,67 @@
     const STORE_URL = "{{ route('usuarios.store') }}";
     const BASE_URL = "{{ url('/usuarios') }}";
 
+    let currentPage = 1;
+    const recordsPerPage = 10;
+
+    document.addEventListener('DOMContentLoaded', () => {
+        applyPagination();
+    });
+
+    function applyPagination() {
+        const rows = Array.from(document.querySelectorAll('#table-body tr.trow')).filter(row => row.style.display !== 'none');
+        const infoSpan = document.getElementById('page-info');
+        const prevBtn = document.getElementById('btn-prev');
+        const nextBtn = document.getElementById('btn-next');
+
+        const total = rows.length;
+        const totalPages = Math.ceil(total / recordsPerPage) || 1;
+
+        if (currentPage > totalPages) {
+            currentPage = totalPages;
+        }
+
+        const startIdx = (currentPage - 1) * recordsPerPage;
+        const endIdx = startIdx + recordsPerPage;
+
+        rows.forEach((row, idx) => {
+            if (idx >= startIdx && idx < endIdx) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+
+        if (total === 0) {
+            infoSpan.textContent = "Mostrando registros 0 de 0";
+            prevBtn.disabled = true;
+            nextBtn.disabled = true;
+        } else {
+            infoSpan.textContent = `Mostrando registros ${startIdx + 1}-${Math.min(endIdx, total)} de ${total}`;
+            prevBtn.disabled = currentPage === 1;
+            nextBtn.disabled = currentPage === totalPages;
+        }
+    }
+
+    function prevPage() {
+        if (currentPage > 1) {
+            currentPage--;
+            applyPagination();
+        }
+    }
+
+    function nextPage() {
+        currentPage++;
+        applyPagination();
+    }
+
     function filterTable() {
         const q = document.getElementById('search-input').value.toLowerCase();
-        document.querySelectorAll('#table-body tr').forEach(row => {
+        document.querySelectorAll('#table-body tr.trow').forEach(row => {
             row.style.display = row.dataset.search?.includes(q) ? '' : 'none';
         });
+        currentPage = 1;
+        applyPagination();
     }
 
     function openModal(mode, data = null) {

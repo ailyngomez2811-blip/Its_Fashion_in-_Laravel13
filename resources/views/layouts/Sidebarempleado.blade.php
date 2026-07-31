@@ -109,7 +109,27 @@
                 </li>
             </ul>
 
-            <ul class="navbar-nav ml-auto">
+            <ul class="navbar-nav ml-auto flex items-center gap-3">
+                <!-- Notifications Dropdown Menu -->
+                <li class="nav-item dropdown relative" id="bell-dropdown-container">
+                    <a class="nav-link relative cursor-pointer flex items-center justify-center w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 transition" data-toggle="dropdown" href="#" id="bell-icon-link">
+                        <i class="far fa-bell text-slate-600 text-sm"></i>
+                        <span id="bell-badge" class="hidden absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white rounded-full flex items-center justify-center text-[9px] font-bold">0</span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right rounded-2xl border border-slate-100 shadow-xl p-0 overflow-hidden" style="min-width: 320px;">
+                        <div class="px-4 py-3 border-b border-slate-100 flex items-center justify-between bg-slate-50">
+                            <span class="text-xs font-bold text-slate-800 uppercase tracking-wider">Notificaciones</span>
+                            <button onclick="leerTodasNotificaciones(event)" class="text-[10px] text-blue-600 hover:underline font-semibold">Marcar como leídas</button>
+                        </div>
+                        <div id="notifications-list" class="max-h-72 overflow-y-auto divide-y divide-slate-50">
+                            <div class="py-8 text-center text-slate-400">
+                                <i class="far fa-bell-slash text-2xl mb-2 opacity-30"></i>
+                                <p class="text-xs">No tienes notificaciones nuevas</p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" data-toggle="dropdown" href="#">
                         <span class="d-inline-flex align-items-center justify-content-center rounded-circle bg-primary text-white fw-bold"
@@ -208,7 +228,79 @@
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <!-- Script de Notificaciones -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            cargarNotificaciones();
+            setInterval(cargarNotificaciones, 30000);
+        });
+
+        function cargarNotificaciones() {
+            fetch("{{ route('notificaciones.index') }}")
+                .then(r => r.json())
+                .then(notis => {
+                    const badge = document.getElementById('bell-badge');
+                    const list = document.getElementById('notifications-list');
+                    if (notis.length > 0) {
+                        badge.textContent = notis.length;
+                        badge.classList.remove('hidden');
+
+                        list.innerHTML = notis.map(n => {
+                            let icon = 'fa-info-circle text-blue-500';
+                            let bg = 'bg-blue-50';
+                            if (n.data.type === 'devolucion') {
+                                icon = 'fa-undo-alt text-amber-500';
+                                bg = 'bg-amber-50';
+                            } else if (n.data.type === 'stock_critico') {
+                                icon = 'fa-exclamation-triangle text-red-500';
+                                bg = 'bg-red-50';
+                            }
+
+                            return `
+                                <a href="${n.data.url}" class="flex items-start gap-3 p-3 hover:bg-slate-50 transition-colors">
+                                    <div class="w-8 h-8 rounded-lg ${bg} flex items-center justify-center flex-shrink-0">
+                                        <i class="fas ${icon} text-sm"></i>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-xs font-bold text-slate-800 truncate">${n.data.title}</p>
+                                        <p class="text-[11px] text-slate-500 line-clamp-2 mt-0.5">${n.data.message}</p>
+                                    </div>
+                                </a>
+                            `;
+                        }).join('');
+                    } else {
+                        badge.classList.add('hidden');
+                        list.innerHTML = `
+                            <div class="py-8 text-center text-slate-400">
+                                <i class="far fa-bell-slash text-2xl mb-2 opacity-30"></i>
+                                <p class="text-xs">No tienes notificaciones nuevas</p>
+                            </div>
+                        `;
+                    }
+                });
+        }
+
+        function leerTodasNotificaciones(e) {
+            if (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            fetch("{{ route('notificaciones.readAll') }}", {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(r => r.json())
+            .then(res => {
+                if (res.ok) {
+                    cargarNotificaciones();
+                }
+            });
+        }
+    </script>
+
     @stack('scripts')
 </body>
-
 </html>

@@ -129,6 +129,24 @@ class DevolucionController extends Controller
                 return $devolucion->id;
             });
 
+            // NOTIFICACIÓN: Al administrador y empleados sobre una nueva devolución pendiente
+            try {
+                $adminsYEmpleados = \App\Models\User::whereIn('rol_id', [1, 2])->get();
+                $usuario = Auth::user();
+                $nombreCliente = $usuario ? ($usuario->nombre . ' ' . $usuario->apellido) : 'Un cliente';
+                $noti = new \App\Notifications\SystemNotification(
+                    'Nueva Solicitud de Devolución',
+                    "{$nombreCliente} ha solicitado la devolución de la venta #{$venta->id}.",
+                    'devolucion',
+                    url('/devoluciones')
+                );
+                foreach ($adminsYEmpleados as $dest) {
+                    $dest->notify($noti);
+                }
+            } catch (\Exception $ex) {
+                // Silenciar fallos de notificación
+            }
+
             return response()->json([
                 'ok' => true,
                 'msg' => 'Solicitud de devolución registrada correctamente.',
@@ -231,6 +249,21 @@ class DevolucionController extends Controller
                 }
             });
 
+            // NOTIFICACIÓN: Al cliente solicitante de la devolución
+            try {
+                $cliente = \App\Models\User::find($devolucion->venta->cliente_id ?? $devolucion->usuario_id);
+                if ($cliente) {
+                    $cliente->notify(new \App\Notifications\SystemNotification(
+                        'Devolución Aprobada',
+                        "Tu solicitud de devolución para la venta #{$devolucion->venta_id} ha sido aprobada.",
+                        'devolucion',
+                        url('/mis-devolaciones') // O ruta de devoluciones del cliente
+                    ));
+                }
+            } catch (\Exception $ex) {
+                // Silenciar fallos de notificación
+            }
+
             return response()->json(['ok' => true, 'msg' => 'La devolución ha sido aprobada correctamente.']);
 
         } catch (\Exception $e) {
@@ -244,7 +277,7 @@ class DevolucionController extends Controller
     public function rechazar(Devolucion $devolucion): JsonResponse
     {
         if (Auth::user()->rol_id !== 1) {
-            return response()->json(['ok' => false, 'msg' => 'Solo el Administrador está autorizado para resolver devoluciones.'], 403);
+            return response()->json(['ok' => false, 'msg' => 'Solo el Administrador está authorized para resolver devoluciones.'], 403);
         }
 
         if ($devolucion->estado !== 'Pendiente') {
@@ -257,6 +290,21 @@ class DevolucionController extends Controller
                 'fecha_resolucion' => now(),
                 'admin_id' => Auth::id(),
             ]);
+
+            // NOTIFICACIÓN: Al cliente solicitante de la devolución
+            try {
+                $cliente = \App\Models\User::find($devolucion->venta->cliente_id ?? $devolucion->usuario_id);
+                if ($cliente) {
+                    $cliente->notify(new \App\Notifications\SystemNotification(
+                        'Devolución Rechazada',
+                        "Tu solicitud de devolución para la venta #{$devolucion->venta_id} ha sido rechazada.",
+                        'devolucion',
+                        url('/mis-devolaciones')
+                    ));
+                }
+            } catch (\Exception $ex) {
+                // Silenciar fallos de notificación
+            }
 
             return response()->json(['ok' => true, 'msg' => 'La solicitud de devolución ha sido rechazada correctamente.']);
 

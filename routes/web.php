@@ -158,6 +158,22 @@ Route::get('/reportes/exportar/excel', [ReporteController::class, 'exportarExcel
     ->middleware('auth')
     ->name('reportes.exportar.excel');
 
+Route::get('/notificaciones', function() {
+    $user = \Illuminate\Support\Facades\Auth::user();
+    if ($user instanceof \App\Models\User) {
+        return response()->json($user->unreadNotifications);
+    }
+    return response()->json([]);
+})->middleware('auth')->name('notificaciones.index');
+
+Route::post('/notificaciones/leer-todas', function() {
+    $user = \Illuminate\Support\Facades\Auth::user();
+    if ($user instanceof \App\Models\User) {
+        $user->unreadNotifications->markAsRead();
+    }
+    return response()->json(['ok' => true]);
+})->middleware('auth')->name('notificaciones.readAll');
+
 
 
 

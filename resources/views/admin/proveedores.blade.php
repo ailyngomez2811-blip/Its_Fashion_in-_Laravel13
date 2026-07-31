@@ -155,6 +155,14 @@
                     @endforelse
                 </tbody>
             </table>
+            <!-- Paginador de Proveedores -->
+            <div id="providers-pagination" class="px-6 py-4 border-t border-slate-100 flex items-center justify-between flex-wrap gap-2 bg-slate-50/50">
+                <span class="text-xs text-slate-500 font-medium" id="providers-page-info">Mostrando registros 1-10</span>
+                <div class="flex items-center gap-2">
+                    <button type="button" onclick="prevProvidersPage()" id="btn-providers-prev" class="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-slate-600 text-xs font-semibold hover:bg-slate-50 disabled:opacity-50 transition">Anterior</button>
+                    <button type="button" onclick="nextProvidersPage()" id="btn-providers-next" class="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-slate-600 text-xs font-semibold hover:bg-slate-50 disabled:opacity-50 transition">Siguiente</button>
+                </div>
+            </div>
         </div>
         <div id="empty-state" class="hidden py-16 text-center text-slate-400">
             <i class="fas fa-search text-4xl mb-3 block opacity-30"></i>
@@ -241,6 +249,71 @@
     const STORE_URL = "{{ route('proveedores.store') }}";
     const BASE_URL = "{{ url('/proveedores') }}";
 
+    let currentProvidersPage = 1;
+    const providersRecordsPerPage = 10;
+
+    document.addEventListener('DOMContentLoaded', () => {
+        applyProvidersPagination();
+    });
+
+    function applyProvidersPagination() {
+        const rows = Array.from(document.querySelectorAll('#table-body tr')).filter(row => row.dataset.search && row.style.display !== 'none');
+        const infoSpan = document.getElementById('providers-page-info');
+        const prevBtn = document.getElementById('btn-providers-prev');
+        const nextBtn = document.getElementById('btn-providers-next');
+
+        const total = rows.length;
+        const totalPages = Math.ceil(total / providersRecordsPerPage) || 1;
+
+        if (currentProvidersPage > totalPages) {
+            currentProvidersPage = totalPages;
+        }
+
+        const startIdx = (currentProvidersPage - 1) * providersRecordsPerPage;
+        const endIdx = startIdx + providersRecordsPerPage;
+
+        // Mostrar solo los de la pagina actual, el resto 'none'
+        const allRows = document.querySelectorAll('#table-body tr');
+        let matchedIdx = 0;
+        allRows.forEach(row => {
+            if (row.dataset.search) {
+                // Si estaba oculto por filtro de busqueda, lo dejamos oculto
+                if (row.getAttribute('data-filtered') === 'true') {
+                    row.style.display = 'none';
+                } else {
+                    if (matchedIdx >= startIdx && matchedIdx < endIdx) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                    matchedIdx++;
+                }
+            }
+        });
+
+        if (total === 0) {
+            infoSpan.textContent = "Mostrando registros 0 de 0";
+            prevBtn.disabled = true;
+            nextBtn.disabled = true;
+        } else {
+            infoSpan.textContent = `Mostrando registros ${startIdx + 1}-${Math.min(endIdx, total)} de ${total}`;
+            prevBtn.disabled = currentProvidersPage === 1;
+            nextBtn.disabled = currentProvidersPage === totalPages;
+        }
+    }
+
+    function prevProvidersPage() {
+        if (currentProvidersPage > 1) {
+            currentProvidersPage--;
+            applyProvidersPagination();
+        }
+    }
+
+    function nextProvidersPage() {
+        currentProvidersPage++;
+        applyProvidersPagination();
+    }
+
     // ── Filtrado local reactivo ────────────────────────────────────────────────────
     function filterTable() {
         const q = document.getElementById('search-input').value.toLowerCase();
@@ -249,16 +322,23 @@
         document.querySelectorAll('#table-body tr').forEach(row => {
             if (row.dataset.search) {
                 const show = !q || row.dataset.search.includes(q);
-                row.style.display = show ? '' : 'none';
-                if (show) visible++;
+                if (show) {
+                    row.removeAttribute('data-filtered');
+                    visible++;
+                } else {
+                    row.setAttribute('data-filtered', 'true');
+                }
             }
         });
 
         document.getElementById('empty-state').classList.toggle('hidden', visible > 0);
+        
+        currentProvidersPage = 1;
+        applyProvidersPagination();
     }
 
     // ── Modal Apertura y Cierre ────────────────────────────────────────────────────
-    @if(auth() - > user() - > rol_id === 1)
+    @if(auth()->user()->rol_id === 1)
 
     function openModal(mode, data = null) {
         const modal = document.getElementById('modal-prov');
@@ -353,7 +433,7 @@
     @endif
 
     // Notificaciones de errores de validación de backend
-    @if($errors - > any())
+    @if($errors->any())
     document.addEventListener('DOMContentLoaded', () => {
         Swal.fire({
             icon: 'error',

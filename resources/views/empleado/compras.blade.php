@@ -94,6 +94,14 @@
                     @endforelse
                 </tbody>
             </table>
+            <!-- Paginador de Compras (Empleado) -->
+            <div id="purchases-pagination" class="px-6 py-4 border-t border-slate-100 flex items-center justify-between flex-wrap gap-2 bg-slate-50/50">
+                <span class="text-xs text-slate-500 font-medium" id="purchases-page-info">Mostrando registros 1-10</span>
+                <div class="flex items-center gap-2">
+                    <button type="button" onclick="prevPurchasesPage()" id="btn-purchases-prev" class="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-slate-600 text-xs font-semibold hover:bg-slate-50 disabled:opacity-50 transition">Anterior</button>
+                    <button type="button" onclick="nextPurchasesPage()" id="btn-purchases-next" class="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-slate-600 text-xs font-semibold hover:bg-slate-50 disabled:opacity-50 transition">Siguiente</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -211,6 +219,60 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+    let currentPurchasesPage = 1;
+    const purchasesRecordsPerPage = 10;
+
+    document.addEventListener('DOMContentLoaded', () => {
+        applyPurchasesPagination();
+    });
+
+    function applyPurchasesPagination() {
+        const rows = Array.from(document.querySelectorAll('#compras-tbody tr[id^="crow-"]')).filter(row => row.style.display !== 'none');
+        const infoSpan = document.getElementById('purchases-page-info');
+        const prevBtn = document.getElementById('btn-purchases-prev');
+        const nextBtn = document.getElementById('btn-purchases-next');
+
+        const total = rows.length;
+        const totalPages = Math.ceil(total / purchasesRecordsPerPage) || 1;
+
+        if (currentPurchasesPage > totalPages) {
+            currentPurchasesPage = totalPages;
+        }
+
+        const startIdx = (currentPurchasesPage - 1) * purchasesRecordsPerPage;
+        const endIdx = startIdx + purchasesRecordsPerPage;
+
+        rows.forEach((row, idx) => {
+            if (idx >= startIdx && idx < endIdx) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+
+        if (total === 0) {
+            infoSpan.textContent = "Mostrando registros 0 de 0";
+            prevBtn.disabled = true;
+            nextBtn.disabled = true;
+        } else {
+            infoSpan.textContent = `Mostrando registros ${startIdx + 1}-${Math.min(endIdx, total)} de ${total}`;
+            prevBtn.disabled = currentPurchasesPage === 1;
+            nextBtn.disabled = currentPurchasesPage === totalPages;
+        }
+    }
+
+    function prevPurchasesPage() {
+        if (currentPurchasesPage > 1) {
+            currentPurchasesPage--;
+            applyPurchasesPagination();
+        }
+    }
+
+    function nextPurchasesPage() {
+        currentPurchasesPage++;
+        applyPurchasesPagination();
+    }
+
     const BASE_URL = "{{ url('/compras') }}";
     
     let items = [];

@@ -308,6 +308,14 @@
                     @endforelse
                 </tbody>
             </table>
+            <!-- Paginador de Productos -->
+            <div id="products-pagination" class="px-6 py-4 border-t border-slate-100 flex items-center justify-between flex-wrap gap-2 bg-slate-50/50">
+                <span class="text-xs text-slate-500 font-medium" id="products-page-info">Mostrando registros 1-10</span>
+                <div class="flex items-center gap-2">
+                    <button type="button" onclick="prevProductsPage()" id="btn-products-prev" class="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-slate-600 text-xs font-semibold hover:bg-slate-50 disabled:opacity-50 transition">Anterior</button>
+                    <button type="button" onclick="nextProductsPage()" id="btn-products-next" class="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-slate-600 text-xs font-semibold hover:bg-slate-50 disabled:opacity-50 transition">Siguiente</button>
+                </div>
+            </div>
         </div>
         <div id="empty-state" class="hidden py-16 text-center text-slate-400">
             <i class="fas fa-search text-4xl mb-3 block opacity-30"></i>
@@ -416,6 +424,69 @@
     const STORE_URL = "{{ route('productos.store') }}";
     const BASE_URL = "{{ url('/productos') }}";
 
+    let currentProductsPage = 1;
+    const productsRecordsPerPage = 10;
+
+    document.addEventListener('DOMContentLoaded', () => {
+        applyProductsPagination();
+    });
+
+    function applyProductsPagination() {
+        const rows = Array.from(document.querySelectorAll('#table-body tr')).filter(row => row.id && row.id.startsWith('row-') && row.style.display !== 'none');
+        const infoSpan = document.getElementById('products-page-info');
+        const prevBtn = document.getElementById('btn-products-prev');
+        const nextBtn = document.getElementById('btn-products-next');
+
+        const total = rows.length;
+        const totalPages = Math.ceil(total / productsRecordsPerPage) || 1;
+
+        if (currentProductsPage > totalPages) {
+            currentProductsPage = totalPages;
+        }
+
+        const startIdx = (currentProductsPage - 1) * productsRecordsPerPage;
+        const endIdx = startIdx + productsRecordsPerPage;
+
+        const allRows = document.querySelectorAll('#table-body tr');
+        let matchedIdx = 0;
+        allRows.forEach(row => {
+            if (row.id && row.id.startsWith('row-')) {
+                if (row.getAttribute('data-filtered') === 'true') {
+                    row.style.display = 'none';
+                } else {
+                    if (matchedIdx >= startIdx && matchedIdx < endIdx) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                    matchedIdx++;
+                }
+            }
+        });
+
+        if (total === 0) {
+            infoSpan.textContent = "Mostrando registros 0 de 0";
+            prevBtn.disabled = true;
+            nextBtn.disabled = true;
+        } else {
+            infoSpan.textContent = `Mostrando registros ${startIdx + 1}-${Math.min(endIdx, total)} de ${total}`;
+            prevBtn.disabled = currentProductsPage === 1;
+            nextBtn.disabled = currentProductsPage === totalPages;
+        }
+    }
+
+    function prevProductsPage() {
+        if (currentProductsPage > 1) {
+            currentProductsPage--;
+            applyProductsPagination();
+        }
+    }
+
+    function nextProductsPage() {
+        currentProductsPage++;
+        applyProductsPagination();
+    }
+
     // ── Filtros en cliente ────────────────────────────────────────────────────────
     function filterTable() {
         const q = document.getElementById('search-input').value.toLowerCase();
@@ -437,11 +508,18 @@
             }
 
             const show = matchQ && matchC && matchE;
-            row.style.display = show ? '' : 'none';
-            if (show) visible++;
+            if (show) {
+                row.removeAttribute('data-filtered');
+                visible++;
+            } else {
+                row.setAttribute('data-filtered', 'true');
+            }
         });
 
         document.getElementById('empty-state').classList.toggle('hidden', visible > 0);
+        
+        currentProductsPage = 1;
+        applyProductsPagination();
     }
 
     // ── Alternar estado vía AJAX ───────────────────────────────────────────────────

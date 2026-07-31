@@ -155,9 +155,18 @@ class ReporteController extends Controller
         // 7. Inventario actual consolidado
         $inv = Producto::with('categoria')->get();
 
+        // 8. Compras/Abastecimiento del período para Reportes de Proveedor (Escenario 3)
+        $comprasPeriodo = \App\Models\Compra::with(['proveedor', 'usuario'])
+            ->whereBetween(DB::raw('DATE(fecha)'), [$desde, $hasta])
+            ->orderBy('fecha', 'desc')
+            ->get();
+
+        $totalInversionCompras = $comprasPeriodo->sum('total');
+
         return view('admin.reportes', compact(
             'periodo', 'desde', 'hasta', 'ventas_semana', 'dias', 'label_grafica',
-            'ventas_mes', 'meses', 'kpi', 'total_clientes', 'top_productos', 'devols', 'inv'
+            'ventas_mes', 'meses', 'kpi', 'total_clientes', 'top_productos', 'devols', 'inv',
+            'comprasPeriodo', 'totalInversionCompras'
         ));
     }
 

@@ -49,6 +49,18 @@ class LoginRequest extends FormRequest
         // Si lo que escribió parece un correo, busca por email; si no, por username.
         $field = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
 
+        // 1. Intentar buscar al usuario primero para verificar su estado
+        $user = \App\Models\User::where($field, $login)->first();
+
+        if ($user && $user->estado === 'Inactivo') {
+            RateLimiter::hit($this->throttleKey());
+
+            throw ValidationException::withMessages([
+                'username' => 'Esta cuenta se encuentra inactiva. Por favor, ponte en contacto con el administrador para reactivar tu acceso.',
+            ]);
+        }
+
+        // 2. Si el usuario existe y no está inactivo, procedemos con las credenciales normales
         $credentials = [
             $field => $login,
             'password' => $this->input('password'),

@@ -184,16 +184,24 @@
                     <tr id="row-empty">
                         <td colspan="8" class="px-6 py-16 text-center text-slate-400">
                             <i class="fas fa-undo-alt text-4xl mb-3 block opacity-20"></i>
-                            <p class="text-sm">No hay solicitudes de devolución registradas</p>
+                            <p class="text-sm">No hay solicitudes de devolución registradas aún</p>
                         </td>
                     </tr>
                     @endforelse
                 </tbody>
             </table>
+            <!-- Paginador de Devoluciones -->
+            <div id="returns-pagination" class="px-6 py-4 border-t border-slate-100 flex items-center justify-between flex-wrap gap-2 bg-slate-50/50">
+                <span class="text-xs text-slate-500 font-medium" id="returns-page-info">Mostrando registros 1-10</span>
+                <div class="flex items-center gap-2">
+                    <button type="button" onclick="prevReturnsPage()" id="btn-returns-prev" class="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-slate-600 text-xs font-semibold hover:bg-slate-50 disabled:opacity-50 transition">Anterior</button>
+                    <button type="button" onclick="nextReturnsPage()" id="btn-returns-next" class="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-slate-600 text-xs font-semibold hover:bg-slate-50 disabled:opacity-50 transition">Siguiente</button>
+                </div>
+            </div>
         </div>
         <div id="empty-state" class="hidden py-16 text-center text-slate-400">
             <i class="fas fa-search text-4xl mb-3 block opacity-30"></i>
-            <p class="text-sm font-medium">No se encontraron solicitudes para esta pestaña</p>
+            <p class="text-sm font-medium">No se encontraron devoluciones con ese criterio</p>
         </div>
     </div>
 </div>
@@ -220,6 +228,69 @@
 <script>
     const BASE_URL = "{{ url('/devoluciones') }}";
 
+    let currentReturnsPage = 1;
+    const returnsRecordsPerPage = 10;
+
+    document.addEventListener('DOMContentLoaded', () => {
+        applyReturnsPagination();
+    });
+
+    function applyReturnsPagination() {
+        const rows = Array.from(document.querySelectorAll('#tabla-body tr')).filter(row => row.dataset.estado && row.style.display !== 'none');
+        const infoSpan = document.getElementById('returns-page-info');
+        const prevBtn = document.getElementById('btn-returns-prev');
+        const nextBtn = document.getElementById('btn-returns-next');
+
+        const total = rows.length;
+        const totalPages = Math.ceil(total / returnsRecordsPerPage) || 1;
+
+        if (currentReturnsPage > totalPages) {
+            currentReturnsPage = totalPages;
+        }
+
+        const startIdx = (currentReturnsPage - 1) * returnsRecordsPerPage;
+        const endIdx = startIdx + returnsRecordsPerPage;
+
+        const allRows = document.querySelectorAll('#tabla-body tr');
+        let matchedIdx = 0;
+        allRows.forEach(row => {
+            if (row.dataset.estado) {
+                if (row.getAttribute('data-filtered') === 'true') {
+                    row.style.display = 'none';
+                } else {
+                    if (matchedIdx >= startIdx && matchedIdx < endIdx) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                    matchedIdx++;
+                }
+            }
+        });
+
+        if (total === 0) {
+            infoSpan.textContent = "Mostrando registros 0 de 0";
+            prevBtn.disabled = true;
+            nextBtn.disabled = true;
+        } else {
+            infoSpan.textContent = `Mostrando registros ${startIdx + 1}-${Math.min(endIdx, total)} de ${total}`;
+            prevBtn.disabled = currentReturnsPage === 1;
+            nextBtn.disabled = currentReturnsPage === totalPages;
+        }
+    }
+
+    function prevReturnsPage() {
+        if (currentReturnsPage > 1) {
+            currentReturnsPage--;
+            applyReturnsPagination();
+        }
+    }
+
+    function nextReturnsPage() {
+        currentReturnsPage++;
+        applyReturnsPagination();
+    }
+
     // ── Filtro local reactivo por estado ───────────────────────────────────────────
     function filtrar(estado) {
         // Estilo de los botones
@@ -243,8 +314,12 @@
         document.querySelectorAll('#tabla-body tr[data-estado]').forEach(row => {
             total++;
             const show = (estado === 'todos' || row.dataset.estado === estado);
-            row.style.display = show ? '' : 'none';
-            if (show) filtrados++;
+            if (show) {
+                row.removeAttribute('data-filtered');
+                filtrados++;
+            } else {
+                row.setAttribute('data-filtered', 'true');
+            }
         });
 
         document.getElementById('cant-devoluciones').textContent = filtrados;
@@ -253,6 +328,9 @@
         if (!rowEmpty) {
             document.getElementById('empty-state').classList.toggle('hidden', filtrados > 0);
         }
+
+        currentReturnsPage = 1;
+        applyReturnsPagination();
     }
 
     function closeDet() {

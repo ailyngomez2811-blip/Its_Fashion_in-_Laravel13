@@ -113,8 +113,75 @@
                         @endforeach
                     </tbody>
                 </table>
+                <!-- Paginador de Devoluciones (Cliente) -->
+                <div id="returns-pagination" class="px-6 py-4 border-t border-slate-100 flex items-center justify-between flex-wrap gap-2 bg-slate-50/50">
+                    <span class="text-xs text-slate-500 font-medium" id="returns-page-info">Mostrando registros 1-10</span>
+                    <div class="flex items-center gap-2">
+                        <button type="button" onclick="prevReturnsPage()" id="btn-returns-prev" class="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-slate-600 text-xs font-semibold hover:bg-slate-50 disabled:opacity-50 transition">Anterior</button>
+                        <button type="button" onclick="nextReturnsPage()" id="btn-returns-next" class="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-slate-600 text-xs font-semibold hover:bg-slate-50 disabled:opacity-50 transition">Siguiente</button>
+                    </div>
+                </div>
             </div>
         @endif
     </div>
 </div>
+@push('scripts')
+<script>
+    let currentReturnsPage = 1;
+    const returnsRecordsPerPage = 10;
+
+    document.addEventListener('DOMContentLoaded', () => {
+        applyReturnsPagination();
+    });
+
+    function applyReturnsPagination() {
+        const rows = Array.from(document.querySelectorAll('tbody tr'));
+        const infoSpan = document.getElementById('returns-page-info');
+        const prevBtn = document.getElementById('btn-returns-prev');
+        const nextBtn = document.getElementById('btn-returns-next');
+
+        if (!infoSpan || !prevBtn || !nextBtn) return;
+
+        const total = rows.length;
+        const totalPages = Math.ceil(total / returnsRecordsPerPage) || 1;
+
+        if (currentReturnsPage > totalPages) {
+            currentReturnsPage = totalPages;
+        }
+
+        const startIdx = (currentReturnsPage - 1) * returnsRecordsPerPage;
+        const endIdx = startIdx + returnsRecordsPerPage;
+
+        rows.forEach((row, idx) => {
+            if (idx >= startIdx && idx < endIdx) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+
+        if (total === 0) {
+            infoSpan.textContent = "Mostrando registros 0 de 0";
+            prevBtn.disabled = true;
+            nextBtn.disabled = true;
+        } else {
+            infoSpan.textContent = `Mostrando registros ${startIdx + 1}-${Math.min(endIdx, total)} de ${total}`;
+            prevBtn.disabled = currentReturnsPage === 1;
+            nextBtn.disabled = currentReturnsPage === totalPages;
+        }
+    }
+
+    function prevReturnsPage() {
+        if (currentReturnsPage > 1) {
+            currentReturnsPage--;
+            applyReturnsPagination();
+        }
+    }
+
+    function nextReturnsPage() {
+        currentReturnsPage++;
+        applyReturnsPagination();
+    }
+</script>
+@endpush
 @endsection

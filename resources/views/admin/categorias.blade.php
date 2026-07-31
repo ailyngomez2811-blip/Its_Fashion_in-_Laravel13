@@ -149,6 +149,14 @@
                     @endforelse
                 </tbody>
             </table>
+            <!-- Paginador de Categorías -->
+            <div id="categories-pagination" class="px-6 py-4 border-t border-slate-100 flex items-center justify-between flex-wrap gap-2 bg-slate-50/50">
+                <span class="text-xs text-slate-500 font-medium" id="categories-page-info">Mostrando registros 1-10</span>
+                <div class="flex items-center gap-2">
+                    <button type="button" onclick="prevCategoriesPage()" id="btn-categories-prev" class="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-slate-600 text-xs font-semibold hover:bg-slate-50 disabled:opacity-50 transition">Anterior</button>
+                    <button type="button" onclick="nextCategoriesPage()" id="btn-categories-next" class="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-slate-600 text-xs font-semibold hover:bg-slate-50 disabled:opacity-50 transition">Siguiente</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -210,14 +218,88 @@
     const STORE_URL = "{{ route('categorias.store') }}";
     const BASE_URL = "{{ url('/categorias') }}";
 
+    let currentCategoriesPage = 1;
+    const categoriesRecordsPerPage = 10;
+
+    document.addEventListener('DOMContentLoaded', () => {
+        applyCategoriesPagination();
+    });
+
+    function applyCategoriesPagination() {
+        const rows = Array.from(document.querySelectorAll('#table-body tr')).filter(row => row.dataset.search && row.style.display !== 'none');
+        const infoSpan = document.getElementById('categories-page-info');
+        const prevBtn = document.getElementById('btn-categories-prev');
+        const nextBtn = document.getElementById('btn-categories-next');
+
+        const total = rows.length;
+        const totalPages = Math.ceil(total / categoriesRecordsPerPage) || 1;
+
+        if (currentCategoriesPage > totalPages) {
+            currentCategoriesPage = totalPages;
+        }
+
+        const startIdx = (currentCategoriesPage - 1) * categoriesRecordsPerPage;
+        const endIdx = startIdx + categoriesRecordsPerPage;
+
+        const allRows = document.querySelectorAll('#table-body tr');
+        let matchedIdx = 0;
+        allRows.forEach(row => {
+            if (row.dataset.search) {
+                if (row.getAttribute('data-filtered') === 'true') {
+                    row.style.display = 'none';
+                } else {
+                    if (matchedIdx >= startIdx && matchedIdx < endIdx) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                    matchedIdx++;
+                }
+            }
+        });
+
+        if (total === 0) {
+            infoSpan.textContent = "Mostrando registros 0 de 0";
+            prevBtn.disabled = true;
+            nextBtn.disabled = true;
+        } else {
+            infoSpan.textContent = `Mostrando registros ${startIdx + 1}-${Math.min(endIdx, total)} de ${total}`;
+            prevBtn.disabled = currentCategoriesPage === 1;
+            nextBtn.disabled = currentCategoriesPage === totalPages;
+        }
+    }
+
+    function prevCategoriesPage() {
+        if (currentCategoriesPage > 1) {
+            currentCategoriesPage--;
+            applyCategoriesPagination();
+        }
+    }
+
+    function nextCategoriesPage() {
+        currentCategoriesPage++;
+        applyCategoriesPagination();
+    }
+
     // Filtrar la tabla de manera reactiva localmente
     function filterTable() {
         const q = document.getElementById('search-input').value.toLowerCase();
+        let visible = 0;
+
         document.querySelectorAll('#table-body tr').forEach(row => {
             if (row.dataset.search) {
-                row.style.display = row.dataset.search.includes(q) ? '' : 'none';
+                const show = row.dataset.search.includes(q);
+                if (show) {
+                    row.removeAttribute('data-filtered');
+                    visible++;
+                } else {
+                    row.setAttribute('data-filtered', 'true');
+                }
             }
         });
+
+        currentCategoriesPage = 1;
+        applyCategoriesPagination();
     }
 
     // Abrir modal configurado para creación o edición

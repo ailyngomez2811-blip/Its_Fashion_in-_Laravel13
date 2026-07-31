@@ -304,6 +304,14 @@
                     @endforelse
                 </tbody>
             </table>
+            <!-- Paginador de Clientes -->
+            <div id="clients-pagination" class="px-6 py-4 border-t border-slate-100 flex items-center justify-between flex-wrap gap-2 bg-slate-50/50">
+                <span class="text-xs text-slate-500 font-medium" id="clients-page-info">Mostrando registros 1-10</span>
+                <div class="flex items-center gap-2">
+                    <button type="button" onclick="prevClientsPage()" id="btn-clients-prev" class="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-slate-600 text-xs font-semibold hover:bg-slate-50 disabled:opacity-50 transition">Anterior</button>
+                    <button type="button" onclick="nextClientsPage()" id="btn-clients-next" class="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-slate-600 text-xs font-semibold hover:bg-slate-50 disabled:opacity-50 transition">Siguiente</button>
+                </div>
+            </div>
         </div>
         <div id="empty-state" class="hidden py-16 text-center text-slate-400">
             <i class="fas fa-search text-4xl mb-3 block opacity-30"></i>
@@ -424,6 +432,60 @@
     const CLIENTES_URL = "{{ url('/clientes') }}";
     let currentId = null;
 
+    let currentClientsPage = 1;
+    const clientsRecordsPerPage = 10;
+
+    document.addEventListener('DOMContentLoaded', () => {
+        applyClientsPagination();
+    });
+
+    function applyClientsPagination() {
+        const rows = Array.from(document.querySelectorAll('#table-body tr[id^="row-"]')).filter(row => row.style.display !== 'none');
+        const infoSpan = document.getElementById('clients-page-info');
+        const prevBtn = document.getElementById('btn-clients-prev');
+        const nextBtn = document.getElementById('btn-clients-next');
+
+        const total = rows.length;
+        const totalPages = Math.ceil(total / clientsRecordsPerPage) || 1;
+
+        if (currentClientsPage > totalPages) {
+            currentClientsPage = totalPages;
+        }
+
+        const startIdx = (currentClientsPage - 1) * clientsRecordsPerPage;
+        const endIdx = startIdx + clientsRecordsPerPage;
+
+        rows.forEach((row, idx) => {
+            if (idx >= startIdx && idx < endIdx) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+
+        if (total === 0) {
+            infoSpan.textContent = "Mostrando registros 0 de 0";
+            prevBtn.disabled = true;
+            nextBtn.disabled = true;
+        } else {
+            infoSpan.textContent = `Mostrando registros ${startIdx + 1}-${Math.min(endIdx, total)} de ${total}`;
+            prevBtn.disabled = currentClientsPage === 1;
+            nextBtn.disabled = currentClientsPage === totalPages;
+        }
+    }
+
+    function prevClientsPage() {
+        if (currentClientsPage > 1) {
+            currentClientsPage--;
+            applyClientsPagination();
+        }
+    }
+
+    function nextClientsPage() {
+        currentClientsPage++;
+        applyClientsPagination();
+    }
+
     // ── Búsqueda reactiva de clientes en la tabla ──────────────────────────────
     function filterTable() {
         const q = document.getElementById('search-input').value.toLowerCase().trim();
@@ -442,6 +504,9 @@
         });
 
         document.getElementById('empty-state').classList.toggle('hidden', visible > 0);
+        
+        currentClientsPage = 1;
+        applyClientsPagination();
     }
 
     // ── Abrir modal de Ficha de Cliente ─────────────────────────────────────────

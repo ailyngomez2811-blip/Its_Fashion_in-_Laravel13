@@ -191,8 +191,8 @@
 
     <!-- Pestañas de Reportes -->
     <div class="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm mb-6" style="box-shadow:0 2px 16px rgba(0,0,0,.04);">
-        <div class="flex border-b border-slate-100 overflow-x-auto">
             <button onclick="switchTab('ventas', this)" class="tab-btn active"><i class="fas fa-chart-line mr-1.5"></i>Ventas e Ingresos</button>
+            <button onclick="switchTab('compras', this)" class="tab-btn"><i class="fas fa-truck mr-1.5"></i>Compras (Abastecimiento)</button>
             <button onclick="switchTab('inventario', this)" class="tab-btn"><i class="fas fa-warehouse mr-1.5"></i>Inventario Actual</button>
             <button onclick="switchTab('productos', this)" class="tab-btn"><i class="fas fa-tshirt mr-1.5"></i>Productos Más Vendidos</button>
             <button onclick="switchTab('devoluciones', this)" class="tab-btn"><i class="fas fa-undo-alt mr-1.5"></i>Devoluciones</button>
@@ -360,6 +360,43 @@
                                 </div>
                             </div>
                         @endforeach
+                    </div>
+                @endif
+            </div>
+
+            <!-- PESTAÑA DE COMPRAS (ABASTECIMIENTO) -->
+            <div id="tab-compras" class="tab-content space-y-6">
+                <div class="p-4 bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-between">
+                    <span class="text-sm font-semibold text-slate-700">Inversión Total en Abastecimiento</span>
+                    <span class="text-xl font-bold text-indigo-600">${{ number_format($totalInversionCompras, 2) }}</span>
+                </div>
+                @if ($comprasPeriodo->isEmpty())
+                    <div class="py-16 text-center text-slate-400">
+                        <i class="fas fa-truck text-3xl mb-3 block opacity-20"></i>
+                        <p class="text-sm">No se registran compras/abastecimiento en este período.</p>
+                    </div>
+                @else
+                    <div class="overflow-x-auto">
+                        <table class="w-full whitespace-nowrap">
+                            <thead>
+                                <tr>
+                                    @foreach (['# Compra', 'Fecha', 'Proveedor', 'Registrado Por', 'Monto Invertido'] as $h)
+                                        <th class="text-left px-5 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide bg-slate-50 border-b border-slate-100">{{ $h }}</th>
+                                    @endforeach
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($comprasPeriodo as $c)
+                                    <tr class="trow text-slate-700 border-b border-slate-50">
+                                        <td class="px-5 py-4 font-mono text-sm text-slate-800">#{{ str_pad($c->id, 5, '0', STR_PAD_LEFT) }}</td>
+                                        <td class="px-5 py-4 text-sm">{{ $c->fecha ? $c->fecha->format('d/m/Y H:i') : '—' }}</td>
+                                        <td class="px-5 py-4 text-sm font-semibold text-slate-800">{{ $c->proveedor->nombre ?? '—' }}</td>
+                                        <td class="px-5 py-4 text-sm text-slate-600">{{ $c->usuario->nombre ?? '—' }} {{ $c->usuario->apellido ?? '' }}</td>
+                                        <td class="px-5 py-4 text-sm font-bold text-slate-800">${{ number_format($c->total, 2) }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 @endif
             </div>

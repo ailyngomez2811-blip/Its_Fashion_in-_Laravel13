@@ -81,6 +81,17 @@ class VentaController extends Controller
             return response()->json(['ok' => false, 'msg' => 'Agrega al menos un producto a la venta.']);
         }
 
+        // Si el pago es en efectivo y no hay caja abierta, bloquear transacción
+        if ($request->metodo_pago === 'Efectivo') {
+            $cajaAbierta = DB::table('cajas')->where('estado', 'Abierta')->exists();
+            if (!$cajaAbierta) {
+                return response()->json([
+                    'ok' => false,
+                    'msg' => 'Debe abrir la caja en el módulo de caja para poder registrar pagos en efectivo.'
+                ]);
+            }
+        }
+
         try {
             $idVenta = DB::transaction(function () use ($request, $items) {
                 // 1. Verificar stock disponible para todos los ítems antes de proceder
@@ -121,6 +132,24 @@ class VentaController extends Controller
                     $producto = Producto::lockForUpdate()->find($item['id_producto']);
                     $nuevoStock = $producto->stock - $item['cantidad'];
                     $producto->update(['stock' => $nuevoStock]);
+
+                    // NOTIFICACIÓN: Stock crítico
+                    if ($nuevoStock <= $producto->stock_minimo) {
+                        try {
+                            $admins = \App\Models\User::where('rol_id', 1)->get();
+                            $noti = new \App\Notifications\SystemNotification(
+                                'Stock Crítico',
+                                "El producto '{$producto->nombre}' ha alcanzado un stock crítico ({$nuevoStock} unidades restantes).",
+                                'stock_critico',
+                                url('/inventario')
+                            );
+                            foreach ($admins as $admin) {
+                                $admin->notify($noti);
+                            }
+                        } catch (\Exception $ex) {
+                            // Silenciar fallos de notificación
+                        }
+                    }
 
                     // Registrar movimiento de Salida en el Kardex (inventario)
                     Inventario::registrarMovimiento($producto->id, 'Salida', $nuevoStock, $item['cantidad']);

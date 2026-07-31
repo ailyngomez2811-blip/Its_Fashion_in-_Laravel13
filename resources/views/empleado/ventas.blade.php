@@ -167,6 +167,14 @@
                     @endforelse
                 </tbody>
             </table>
+            <!-- Paginador de Ventas (Empleado) -->
+            <div id="sales-pagination" class="px-6 py-4 border-t border-slate-100 flex items-center justify-between flex-wrap gap-2 bg-slate-50/50">
+                <span class="text-xs text-slate-500 font-medium" id="sales-page-info">Mostrando registros 1-10</span>
+                <div class="flex items-center gap-2">
+                    <button type="button" onclick="prevSalesPage()" id="btn-sales-prev" class="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-slate-600 text-xs font-semibold hover:bg-slate-50 disabled:opacity-50 transition">Anterior</button>
+                    <button type="button" onclick="nextSalesPage()" id="btn-sales-next" class="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-slate-600 text-xs font-semibold hover:bg-slate-50 disabled:opacity-50 transition">Siguiente</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -301,12 +309,67 @@
     let clienteId = null;
     let clienteTimer;
 
+    let currentSalesPage = 1;
+    const salesRecordsPerPage = 10;
+
+    document.addEventListener('DOMContentLoaded', () => {
+        applySalesPagination();
+    });
+
+    function applySalesPagination() {
+        const rows = Array.from(document.querySelectorAll('#ventas-tbody tr[id^="vrow-"]')).filter(row => row.style.display !== 'none');
+        const infoSpan = document.getElementById('sales-page-info');
+        const prevBtn = document.getElementById('btn-sales-prev');
+        const nextBtn = document.getElementById('btn-sales-next');
+
+        const total = rows.length;
+        const totalPages = Math.ceil(total / salesRecordsPerPage) || 1;
+
+        if (currentSalesPage > totalPages) {
+            currentSalesPage = totalPages;
+        }
+
+        const startIdx = (currentSalesPage - 1) * salesRecordsPerPage;
+        const endIdx = startIdx + salesRecordsPerPage;
+
+        rows.forEach((row, idx) => {
+            if (idx >= startIdx && idx < endIdx) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+
+        if (total === 0) {
+            infoSpan.textContent = "Mostrando registros 0 de 0";
+            prevBtn.disabled = true;
+            nextBtn.disabled = true;
+        } else {
+            infoSpan.textContent = `Mostrando registros ${startIdx + 1}-${Math.min(endIdx, total)} de ${total}`;
+            prevBtn.disabled = currentSalesPage === 1;
+            nextBtn.disabled = currentSalesPage === totalPages;
+        }
+    }
+
+    function prevSalesPage() {
+        if (currentSalesPage > 1) {
+            currentSalesPage--;
+            applySalesPagination();
+        }
+    }
+
+    function nextSalesPage() {
+        currentSalesPage++;
+        applySalesPagination();
+    }
+
     function filterTable() {
         const desde = document.getElementById('filter-desde').value;
         const hasta = document.getElementById('filter-hasta').value;
         const metodo = document.getElementById('filter-metodo').value;
         const estado = document.getElementById('filter-estado').value;
         
+        let visible = 0;
         const rows = document.querySelectorAll('#ventas-tbody tr[id^="vrow-"]');
         rows.forEach(row => {
             const fecha = row.dataset.fecha;
@@ -314,8 +377,17 @@
                 (!estado || row.dataset.estado === estado) &&
                 (!desde || fecha >= desde) &&
                 (!hasta || fecha <= hasta);
-            row.style.display = show ? '' : 'none';
+            
+            if (show) {
+                row.removeAttribute('data-filtered');
+                visible++;
+            } else {
+                row.setAttribute('data-filtered', 'true');
+            }
         });
+
+        currentSalesPage = 1;
+        applySalesPagination();
     }
 
     @if ($cajaAbierta)

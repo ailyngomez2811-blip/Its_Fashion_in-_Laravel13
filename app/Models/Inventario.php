@@ -18,6 +18,11 @@ class Inventario extends Model
         'producto_id',
     ];
 
+    // Castear atributos a tipos nativos
+    protected $casts = [
+        'fecha_registro' => 'datetime',
+    ];
+
     /**
      * Relación: Un movimiento de inventario pertenece a un producto.
      */
