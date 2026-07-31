@@ -57,6 +57,7 @@
             opacity: 0;
             transform: scale(.97)
         }
+
         to {
             opacity: 1;
             transform: scale(1)
@@ -83,19 +84,19 @@
 
         <div class="flex gap-3">
             @if (!$caja)
-                <button onclick="openModal('apertura')" 
-                    class="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-xl hover:shadow-lg transition-all">
-                    <i class="fas fa-play text-xs"></i>Abrir Caja
-                </button>
+            <button onclick="openModal('apertura')"
+                class="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-xl hover:shadow-lg transition-all">
+                <i class="fas fa-play text-xs"></i>Abrir Caja
+            </button>
             @else
-                <button onclick="openModal('movimiento')" 
-                    class="px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 text-sm font-semibold hover:bg-slate-50 shadow-sm transition flex items-center gap-2">
-                    <i class="fas fa-exchange-alt text-xs"></i>Movimiento Manual
-                </button>
-                <button onclick="openModal('cierre')" 
-                    class="px-4 py-2.5 rounded-xl bg-red-600 text-white text-sm font-semibold hover:bg-red-700 hover:shadow-md transition flex items-center gap-2">
-                    <i class="fas fa-stop-circle text-xs"></i>Cerrar Caja
-                </button>
+            <button onclick="openModal('movimiento')"
+                class="px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 text-sm font-semibold hover:bg-slate-50 shadow-sm transition flex items-center gap-2">
+                <i class="fas fa-exchange-alt text-xs"></i>Movimiento Manual
+            </button>
+            <button onclick="openModal('cierre')"
+                class="px-4 py-2.5 rounded-xl bg-red-600 text-white text-sm font-semibold hover:bg-red-700 hover:shadow-md transition flex items-center gap-2">
+                <i class="fas fa-stop-circle text-xs"></i>Cerrar Caja
+            </button>
             @endif
         </div>
     </div>
@@ -114,9 +115,9 @@
                 </div>
                 <p class="text-blue-100 text-sm opacity-90">
                     @if ($caja)
-                        Apertura: {{ $caja->fecha_apertura ? $caja->fecha_apertura->format('d/m/Y H:i') : '—' }} · Responsable: {{ $caja->usuario->nombre ?? '' }} {{ $caja->usuario->apellido ?? '' }}
+                    Apertura: {{ $caja->fecha_apertura ? $caja->fecha_apertura->format('d/m/Y H:i') : '—' }} · Responsable: {{ $caja->usuario->nombre ?? '' }} {{ $caja->usuario->apellido ?? '' }}
                     @else
-                        Sin turno de caja activo en el sistema.
+                    Sin turno de caja activo en el sistema.
                     @endif
                 </p>
             </div>
@@ -124,106 +125,106 @@
     </div>
 
     @if ($caja)
-        <!-- KPIs de la Caja Activa -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-            <div class="bg-white border border-slate-100 rounded-2xl p-5 stat-card shadow-sm">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-blue-100 text-blue-700 rounded-xl flex items-center justify-center">
-                        <i class="fas fa-play text-sm"></i>
-                    </div>
-                    <div>
-                        <p class="text-lg font-bold text-slate-800">${{ number_format($caja->saldo_inicial, 2) }}</p>
-                        <p class="text-xs text-slate-500">Saldo inicial</p>
-                    </div>
+    <!-- KPIs de la Caja Activa -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div class="bg-white border border-slate-100 rounded-2xl p-5 stat-card shadow-sm">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-blue-100 text-blue-700 rounded-xl flex items-center justify-center">
+                    <i class="fas fa-play text-sm"></i>
                 </div>
-            </div>
-            <div class="bg-white border border-slate-100 rounded-2xl p-5 stat-card shadow-sm">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-emerald-100 text-emerald-700 rounded-xl flex items-center justify-center">
-                        <i class="fas fa-arrow-down text-sm"></i>
-                    </div>
-                    <div>
-                        <p class="text-lg font-bold text-slate-800">${{ number_format($caja->total_ingresos ?? 0, 2) }}</p>
-                        <p class="text-xs text-slate-500">Ingresos (+)</p>
-                    </div>
-                </div>
-            </div>
-            <div class="bg-white border border-slate-100 rounded-2xl p-5 stat-card shadow-sm">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-red-100 text-red-700 rounded-xl flex items-center justify-center">
-                        <i class="fas fa-arrow-up text-sm"></i>
-                    </div>
-                    <div>
-                        <p class="text-lg font-bold text-slate-800">${{ number_format($caja->total_egresos ?? 0, 2) }}</p>
-                        <p class="text-xs text-slate-500">Egresos (-)</p>
-                    </div>
-                </div>
-            </div>
-            <div class="bg-white border border-slate-100 rounded-2xl p-5 stat-card shadow-sm">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-amber-100 text-amber-700 rounded-xl flex items-center justify-center">
-                        <i class="fas fa-calculator text-sm"></i>
-                    </div>
-                    <div>
-                        <p class="text-lg font-bold text-slate-800">${{ number_format($saldo_teorico, 2) }}</p>
-                        <p class="text-xs text-slate-500">Saldo teórico</p>
-                    </div>
+                <div>
+                    <p class="text-lg font-bold text-slate-800">${{ number_format($caja->saldo_inicial, 2) }}</p>
+                    <p class="text-xs text-slate-500">Saldo inicial</p>
                 </div>
             </div>
         </div>
+        <div class="bg-white border border-slate-100 rounded-2xl p-5 stat-card shadow-sm">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-emerald-100 text-emerald-700 rounded-xl flex items-center justify-center">
+                    <i class="fas fa-arrow-down text-sm"></i>
+                </div>
+                <div>
+                    <p class="text-lg font-bold text-slate-800">${{ number_format($caja->total_ingresos ?? 0, 2) }}</p>
+                    <p class="text-xs text-slate-500">Ingresos (+)</p>
+                </div>
+            </div>
+        </div>
+        <div class="bg-white border border-slate-100 rounded-2xl p-5 stat-card shadow-sm">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-red-100 text-red-700 rounded-xl flex items-center justify-center">
+                    <i class="fas fa-arrow-up text-sm"></i>
+                </div>
+                <div>
+                    <p class="text-lg font-bold text-slate-800">${{ number_format($caja->total_egresos ?? 0, 2) }}</p>
+                    <p class="text-xs text-slate-500">Egresos (-)</p>
+                </div>
+            </div>
+        </div>
+        <div class="bg-white border border-slate-100 rounded-2xl p-5 stat-card shadow-sm">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-amber-100 text-amber-700 rounded-xl flex items-center justify-center">
+                    <i class="fas fa-calculator text-sm"></i>
+                </div>
+                <div>
+                    <p class="text-lg font-bold text-slate-800">${{ number_format($saldo_teorico, 2) }}</p>
+                    <p class="text-xs text-slate-500">Saldo teórico</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        <!-- Tabla de Movimientos del Turno -->
-        <div class="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm" style="box-shadow:0 2px 16px rgba(0,0,0,.04);">
-            <div class="px-6 py-5 border-b border-slate-100">
-                <h3 class="font-bold text-slate-800">Movimientos del turno</h3>
-                <p class="text-xs text-slate-500 mt-0.5">{{ today()->format('d/m/Y') }}</p>
-            </div>
-            @if (empty($movimientos) || count($movimientos) === 0)
-                <div class="py-16 text-center text-slate-400">
-                    <i class="fas fa-exchange-alt text-3xl mb-3 block opacity-20"></i>
-                    <p class="text-sm">No hay movimientos en este turno de caja aún</p>
-                </div>
-            @else
-                <div class="overflow-x-auto">
-                    <table class="w-full whitespace-nowrap">
-                        <thead>
-                            <tr>
-                                @foreach (['Hora', 'Tipo', 'Concepto', 'Monto'] as $h)
-                                    <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide bg-slate-50 border-b border-slate-100">{{ $h }}</th>
-                                @endforeach
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($movimientos as $m)
-                                <tr class="trow text-slate-700">
-                                    <td class="px-6 py-4 border-b border-slate-50">
-                                        <span class="font-mono text-xs text-slate-500">{{ $m->fecha ? $m->fecha->format('H:i') : '' }}</span>
-                                    </td>
-                                    <td class="px-6 py-4 border-b border-slate-50">
-                                        <span class="badge {{ $m->tipo === 'Ingreso' ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-600' }}">{{ $m->tipo }}</span>
-                                    </td>
-                                    <td class="px-6 py-4 border-b border-slate-50 text-sm text-slate-700">{{ $m->concepto }}</td>
-                                    <td class="px-6 py-4 border-b border-slate-50 font-bold {{ $m->tipo === 'Ingreso' ? 'text-emerald-600' : 'text-red-600' }}">
-                                        {{ $m->tipo === 'Ingreso' ? '+' : '-' }}${{ number_format($m->monto, 2) }}
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            @endif
+    <!-- Tabla de Movimientos del Turno -->
+    <div class="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm" style="box-shadow:0 2px 16px rgba(0,0,0,.04);">
+        <div class="px-6 py-5 border-b border-slate-100">
+            <h3 class="font-bold text-slate-800">Movimientos del turno</h3>
+            <p class="text-xs text-slate-500 mt-0.5">{{ today()->format('d/m/Y') }}</p>
         </div>
+        @if (empty($movimientos) || count($movimientos) === 0)
+        <div class="py-16 text-center text-slate-400">
+            <i class="fas fa-exchange-alt text-3xl mb-3 block opacity-20"></i>
+            <p class="text-sm">No hay movimientos en este turno de caja aún</p>
+        </div>
+        @else
+        <div class="overflow-x-auto">
+            <table class="w-full whitespace-nowrap">
+                <thead>
+                    <tr>
+                        @foreach (['Hora', 'Tipo', 'Concepto', 'Monto'] as $h)
+                        <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide bg-slate-50 border-b border-slate-100">{{ $h }}</th>
+                        @endforeach
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($movimientos as $m)
+                    <tr class="trow text-slate-700">
+                        <td class="px-6 py-4 border-b border-slate-50">
+                            <span class="font-mono text-xs text-slate-500">{{ $m->fecha ? $m->fecha->format('H:i') : '' }}</span>
+                        </td>
+                        <td class="px-6 py-4 border-b border-slate-50">
+                            <span class="badge {{ $m->tipo === 'Ingreso' ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-600' }}">{{ $m->tipo }}</span>
+                        </td>
+                        <td class="px-6 py-4 border-b border-slate-50 text-sm text-slate-700">{{ $m->concepto }}</td>
+                        <td class="px-6 py-4 border-b border-slate-50 font-bold {{ $m->tipo === 'Ingreso' ? 'text-emerald-600' : 'text-red-600' }}">
+                            {{ $m->tipo === 'Ingreso' ? '+' : '-' }}${{ number_format($m->monto, 2) }}
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+        @endif
+    </div>
     @else
-        <!-- Caja Cerrada Mensaje Central -->
-        <div class="py-20 text-center text-slate-400 bg-white rounded-2xl border border-slate-100 shadow-sm">
-            <i class="fas fa-cash-register text-5xl mb-4 block opacity-20"></i>
-            <p class="text-lg font-semibold text-slate-600">Caja sin turno activo</p>
-            <p class="text-sm mt-1 mb-6">Abre la caja ingresando el efectivo inicial para comenzar a operar.</p>
-            <button onclick="openModal('apertura')" 
-                class="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-xl hover:shadow-lg transition-all">
-                <i class="fas fa-play text-xs"></i>Abrir Turno de Caja
-            </button>
-        </div>
+    <!-- Caja Cerrada Mensaje Central -->
+    <div class="py-20 text-center text-slate-400 bg-white rounded-2xl border border-slate-100 shadow-sm">
+        <i class="fas fa-cash-register text-5xl mb-4 block opacity-20"></i>
+        <p class="text-lg font-semibold text-slate-600">Caja sin turno activo</p>
+        <p class="text-sm mt-1 mb-6">Abre la caja ingresando el efectivo inicial para comenzar a operar.</p>
+        <button onclick="openModal('apertura')"
+            class="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-xl hover:shadow-lg transition-all">
+            <i class="fas fa-play text-xs"></i>Abrir Turno de Caja
+        </button>
+    </div>
     @endif
 
     <!-- MODAL GESTOR CAJA -->
@@ -253,7 +254,7 @@
     const ABRIR_URL = "{{ route('caja.abrir') }}";
     const CERRAR_URL = "{{ route('caja.cerrar') }}";
     const MOVIMIENTO_URL = "{{ route('caja.movimiento') }}";
-    
+
     const SALDO_TEORICO = parseFloat("{{ $saldo_teorico }}");
     const ID_CAJA = parseInt("{{ $caja->id ?? 0 }}");
     const RESPONSABLE = "{{ Auth::user()->nombre }} {{ Auth::user()->apellido }}";
@@ -392,35 +393,41 @@
             fd.append('saldo_inicial', monto);
 
             fetch(ABRIR_URL, {
-                method: 'POST',
-                body: fd,
-                headers: { 'X-Requested-With': 'XMLHttpRequest' }
-            })
-            .then(async r => {
-                if (!r.ok) {
-                    const txt = await r.text();
-                    throw new Error(txt);
-                }
-                return r.json();
-            })
-            .then(d => {
-                if (d.ok) {
-                    closeModal();
+                    method: 'POST',
+                    body: fd,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(async r => {
+                    if (!r.ok) {
+                        const txt = await r.text();
+                        throw new Error(txt);
+                    }
+                    return r.json();
+                })
+                .then(d => {
+                    if (d.ok) {
+                        closeModal();
+                        Swal.fire({
+                            icon: 'success',
+                            title: '¡Caja Abierta!',
+                            text: d.msg,
+                            confirmButtonColor: '#2563eb'
+                        }).then(() => {
+                            location.reload();
+                        });
+                    } else {
+                        showToast(d.msg, 'error');
+                    }
+                })
+                .catch(err => {
                     Swal.fire({
-                        icon: 'success',
-                        title: '¡Caja Abierta!',
-                        text: d.msg,
-                        confirmButtonColor: '#2563eb'
-                    }).then(() => {
-                        location.reload();
+                        icon: 'error',
+                        title: 'Error',
+                        text: err.message.substring(0, 200) || 'Error al abrir la caja.'
                     });
-                } else {
-                    showToast(d.msg, 'error');
-                }
-            })
-            .catch(err => {
-                Swal.fire({ icon: 'error', title: 'Error', text: err.message.substring(0, 200) || 'Error al abrir la caja.' });
-            });
+                });
         }
 
         if (type === 'movimiento') {
@@ -439,35 +446,41 @@
             fd.append('monto', monto);
 
             fetch(MOVIMIENTO_URL, {
-                method: 'POST',
-                body: fd,
-                headers: { 'X-Requested-With': 'XMLHttpRequest' }
-            })
-            .then(async r => {
-                if (!r.ok) {
-                    const txt = await r.text();
-                    throw new Error(txt);
-                }
-                return r.json();
-            })
-            .then(d => {
-                if (d.ok) {
-                    closeModal();
+                    method: 'POST',
+                    body: fd,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(async r => {
+                    if (!r.ok) {
+                        const txt = await r.text();
+                        throw new Error(txt);
+                    }
+                    return r.json();
+                })
+                .then(d => {
+                    if (d.ok) {
+                        closeModal();
+                        Swal.fire({
+                            icon: 'success',
+                            title: '¡Movimiento Registrado!',
+                            text: d.msg,
+                            confirmButtonColor: '#2563eb'
+                        }).then(() => {
+                            location.reload();
+                        });
+                    } else {
+                        showToast(d.msg, 'error');
+                    }
+                })
+                .catch(err => {
                     Swal.fire({
-                        icon: 'success',
-                        title: '¡Movimiento Registrado!',
-                        text: d.msg,
-                        confirmButtonColor: '#2563eb'
-                    }).then(() => {
-                        location.reload();
+                        icon: 'error',
+                        title: 'Error',
+                        text: err.message.substring(0, 200) || 'Error al guardar el movimiento.'
                     });
-                } else {
-                    showToast(d.msg, 'error');
-                }
-            })
-            .catch(err => {
-                Swal.fire({ icon: 'error', title: 'Error', text: err.message.substring(0, 200) || 'Error al guardar el movimiento.' });
-            });
+                });
         }
 
         if (type === 'cierre') {
@@ -490,35 +503,41 @@
             fd.append('justificacion', justif);
 
             fetch(CERRAR_URL, {
-                method: 'POST',
-                body: fd,
-                headers: { 'X-Requested-With': 'XMLHttpRequest' }
-            })
-            .then(async r => {
-                if (!r.ok) {
-                    const txt = await r.text();
-                    throw new Error(txt);
-                }
-                return r.json();
-            })
-            .then(d => {
-                if (d.ok) {
-                    closeModal();
+                    method: 'POST',
+                    body: fd,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(async r => {
+                    if (!r.ok) {
+                        const txt = await r.text();
+                        throw new Error(txt);
+                    }
+                    return r.json();
+                })
+                .then(d => {
+                    if (d.ok) {
+                        closeModal();
+                        Swal.fire({
+                            icon: 'success',
+                            title: '¡Caja Cerrada!',
+                            text: d.msg,
+                            confirmButtonColor: '#2563eb'
+                        }).then(() => {
+                            location.reload();
+                        });
+                    } else {
+                        showToast(d.msg, 'error');
+                    }
+                })
+                .catch(err => {
                     Swal.fire({
-                        icon: 'success',
-                        title: '¡Caja Cerrada!',
-                        text: d.msg,
-                        confirmButtonColor: '#2563eb'
-                    }).then(() => {
-                        location.reload();
+                        icon: 'error',
+                        title: 'Error',
+                        text: err.message.substring(0, 200) || 'Error al cerrar la caja.'
                     });
-                } else {
-                    showToast(d.msg, 'error');
-                }
-            })
-            .catch(err => {
-                Swal.fire({ icon: 'error', title: 'Error', text: err.message.substring(0, 200) || 'Error al cerrar la caja.' });
-            });
+                });
         }
     }
 

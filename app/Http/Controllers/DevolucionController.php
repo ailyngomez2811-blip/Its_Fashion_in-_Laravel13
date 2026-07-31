@@ -22,6 +22,20 @@ class DevolucionController extends Controller
      */
     public function index(): View
     {
+        /** @var User $user */
+        $user = Auth::user();
+
+        // Si es cliente, redirigir a su vista específica mis_devoluciones
+        if ($user->rol_id === 3) {
+            $misDevoluciones = Devolucion::whereHas('venta', function ($q) use ($user) {
+                    $q->where('cliente_id', $user->id);
+                })
+                ->orderBy('fecha', 'desc')
+                ->get();
+            $totalDevoluciones = $misDevoluciones->count();
+            return view('cliente.mis_devoluciones', compact('misDevoluciones', 'totalDevoluciones'));
+        }
+
         // Se cargan las devoluciones ordenadas por fecha descendente
         $devoluciones = Devolucion::with(['venta.cliente', 'usuario', 'admin'])
             ->orderBy('fecha', 'desc')

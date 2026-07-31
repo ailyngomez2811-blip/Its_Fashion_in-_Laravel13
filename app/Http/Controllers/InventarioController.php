@@ -6,6 +6,7 @@ use App\Models\Producto;
 use App\Models\Categoria;
 use App\Models\Inventario;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class InventarioController extends Controller
@@ -39,6 +40,12 @@ class InventarioController extends Controller
             'critico' => $critico,
             'sinStock' => $sinStock
         ];
+
+        /** @var User $user */
+        $user = Auth::user();
+        if ($user->rol_id === 2) {
+            return view('empleado.inventario', compact('productos', 'categorias', 'historial', 'kpis'));
+        }
 
         return view('admin.inventario', compact('productos', 'categorias', 'historial', 'kpis'));
     }

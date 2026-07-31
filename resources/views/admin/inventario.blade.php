@@ -116,7 +116,7 @@
                         class="w-full px-3 py-2.5 bg-slate-50 border-2 border-slate-200 rounded-xl text-sm text-slate-700 cursor-pointer focus:outline-none focus:border-brand-accent transition">
                         <option value="">Todas las categorías</option>
                         @foreach ($categorias as $cat)
-                            <option value="{{ strtolower($cat->nombre) }}">{{ $cat->nombre }}</option>
+                        <option value="{{ strtolower($cat->nombre) }}">{{ $cat->nombre }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -130,7 +130,7 @@
                     </select>
                 </div>
                 <div>
-                    <button onclick="limpiarFiltros()" 
+                    <button onclick="limpiarFiltros()"
                         class="w-full px-3 py-2.5 bg-slate-100 text-slate-600 text-sm font-semibold rounded-xl hover:bg-slate-200 transition-all flex items-center justify-center gap-1.5">
                         <i class="fas fa-times text-xs"></i><span>Limpiar</span>
                     </button>
@@ -143,31 +143,31 @@
                 <thead>
                     <tr>
                         @foreach (['Producto', 'Categoría', 'Talla / Color', 'P. Compra', 'P. Venta', 'Stock Actual', 'Stock Mín.', 'Estado'] as $h)
-                            <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide bg-slate-50 border-b border-slate-100">{{ $h }}</th>
+                        <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide bg-slate-50 border-b border-slate-100">{{ $h }}</th>
                         @endforeach
                     </tr>
                 </thead>
                 <tbody id="inv-table-body">
                     @forelse ($productos as $p)
-                        @php
-                            $stockStatus = 'con_stock';
-                            if ($p->stock == 0) {
-                                $stockStatus = 'sin_stock';
-                            } elseif ($p->stock <= ($p->stock_minimo ?? 0)) {
-                                $stockStatus = 'critico';
-                            }
+                    @php
+                    $stockStatus = 'con_stock';
+                    if ($p->stock == 0) {
+                    $stockStatus = 'sin_stock';
+                    } elseif ($p->stock <= ($p->stock_minimo ?? 0)) {
+                        $stockStatus = 'critico';
+                        }
 
-                            $badgeStock = match($stockStatus) {
-                                'sin_stock' => 'bg-red-100 text-red-700',
-                                'critico'   => 'bg-amber-100 text-amber-700',
-                                default     => 'bg-emerald-100 text-emerald-700',
-                            };
-                            $iconStock = match($stockStatus) {
-                                'sin_stock' => 'fa-times-circle',
-                                'critico'   => 'fa-exclamation-triangle',
-                                default     => 'fa-check-circle',
-                            };
-                            $dataSearch = strtolower("{$p->nombre} {$p->talla} {$p->color} " . ($p->categoria->nombre ?? ''));
+                        $badgeStock = match($stockStatus) {
+                        'sin_stock' => 'bg-red-100 text-red-700',
+                        'critico' => 'bg-amber-100 text-amber-700',
+                        default => 'bg-emerald-100 text-emerald-700',
+                        };
+                        $iconStock = match($stockStatus) {
+                        'sin_stock' => 'fa-times-circle',
+                        'critico' => 'fa-exclamation-triangle',
+                        default => 'fa-check-circle',
+                        };
+                        $dataSearch = strtolower("{$p->nombre} {$p->talla} {$p->color} " . ($p->categoria->nombre ?? ''));
                         @endphp
                         <tr class="trow-inv border-b border-slate-50 hover:bg-slate-50 text-slate-700"
                             data-search="{{ $dataSearch }}"
@@ -195,14 +195,14 @@
                                 </span>
                             </td>
                         </tr>
-                    @empty
+                        @empty
                         <tr>
                             <td colspan="8" class="px-6 py-16 text-center text-slate-400 text-sm">
                                 <i class="fas fa-box-open text-4xl mb-3 block opacity-20"></i>
                                 <p>No hay productos registrados en el catálogo.</p>
                             </td>
                         </tr>
-                    @endforelse
+                        @endforelse
                 </tbody>
             </table>
             <div id="inv-empty" class="hidden py-14 text-center text-slate-400">
@@ -233,56 +233,56 @@
                 <thead>
                     <tr>
                         @foreach (['Fecha / Hora', 'Producto', 'Talla / Color', 'Movimiento', 'Cantidad', 'Stock Resultante'] as $h)
-                            <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide bg-slate-50 border-b border-slate-100">{{ $h }}</th>
+                        <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide bg-slate-50 border-b border-slate-100">{{ $h }}</th>
                         @endforeach
                     </tr>
                 </thead>
                 <tbody id="kardex-table-body">
                     @forelse ($historial as $h)
-                        @php
-                            $tipo = $h->tipo_movimiento;
-                            if ($tipo === 'Entrada') {
-                                $colorMov = 'emerald';
-                                $signo = '+';
-                            } elseif ($tipo === 'Salida') {
-                                $colorMov = 'red';
-                                $signo = '-';
-                            } else {
-                                $colorMov = 'amber';
-                                $signo = '~';
-                            }
-                            $dataSearch = strtolower(($h->producto->nombre ?? '') . " " . ($h->producto->talla ?? '') . " " . ($h->producto->color ?? '') . " " . $tipo);
-                        @endphp
-                        <tr class="trow border-b border-slate-50 text-slate-700" data-search="{{ $dataSearch }}">
-                            <td class="px-6 py-4">
-                                <p class="text-sm font-medium text-slate-800">{{ $h->fecha_registro ? $h->fecha_registro->format('d/m/Y') : '' }}</p>
-                                <p class="text-xs text-slate-400">{{ $h->fecha_registro ? $h->fecha_registro->format('H:i') : '' }}</p>
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="font-bold text-slate-800 text-sm">{{ $h->producto->nombre ?? 'Producto Eliminado' }}</span>
-                            </td>
-                            <td class="px-6 py-4 text-sm text-slate-700">
-                                <span class="font-semibold">{{ $h->producto->talla ?? '—' }}</span> <span class="text-slate-400 mx-0.5">/</span> {{ $h->producto->color ?? '—' }}
-                            </td>
-                            <td class="px-6 py-4">
-                                <div class="inline-flex items-center gap-1 text-xs font-semibold text-{{ $colorMov }}-600 bg-{{ $colorMov }}-50 px-2.5 py-1 rounded border border-{{ $colorMov }}-200">
-                                    <i class="fas fa-{{ $tipo === 'Entrada' ? 'level-down-alt' : ($tipo === 'Salida' ? 'level-up-alt' : 'exchange-alt') }}"></i> {{ $tipo }}
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 font-bold text-{{ $colorMov }}-600 text-base">
-                                {{ $signo }}{{ $h->cantidad }} <span class="text-xs text-slate-400 font-normal">uds</span>
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="text-base font-bold text-slate-800">{{ $h->stock_disponible }}</span> <span class="text-xs text-slate-400">uds</span>
-                            </td>
-                        </tr>
+                    @php
+                    $tipo = $h->tipo_movimiento;
+                    if ($tipo === 'Entrada') {
+                    $colorMov = 'emerald';
+                    $signo = '+';
+                    } elseif ($tipo === 'Salida') {
+                    $colorMov = 'red';
+                    $signo = '-';
+                    } else {
+                    $colorMov = 'amber';
+                    $signo = '~';
+                    }
+                    $dataSearch = strtolower(($h->producto->nombre ?? '') . " " . ($h->producto->talla ?? '') . " " . ($h->producto->color ?? '') . " " . $tipo);
+                    @endphp
+                    <tr class="trow border-b border-slate-50 text-slate-700" data-search="{{ $dataSearch }}">
+                        <td class="px-6 py-4">
+                            <p class="text-sm font-medium text-slate-800">{{ $h->fecha_registro ? $h->fecha_registro->format('d/m/Y') : '' }}</p>
+                            <p class="text-xs text-slate-400">{{ $h->fecha_registro ? $h->fecha_registro->format('H:i') : '' }}</p>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="font-bold text-slate-800 text-sm">{{ $h->producto->nombre ?? 'Producto Eliminado' }}</span>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-slate-700">
+                            <span class="font-semibold">{{ $h->producto->talla ?? '—' }}</span> <span class="text-slate-400 mx-0.5">/</span> {{ $h->producto->color ?? '—' }}
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="inline-flex items-center gap-1 text-xs font-semibold text-{{ $colorMov }}-600 bg-{{ $colorMov }}-50 px-2.5 py-1 rounded border border-{{ $colorMov }}-200">
+                                <i class="fas fa-{{ $tipo === 'Entrada' ? 'level-down-alt' : ($tipo === 'Salida' ? 'level-up-alt' : 'exchange-alt') }}"></i> {{ $tipo }}
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 font-bold text-{{ $colorMov }}-600 text-base">
+                            {{ $signo }}{{ $h->cantidad }} <span class="text-xs text-slate-400 font-normal">uds</span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="text-base font-bold text-slate-800">{{ $h->stock_disponible }}</span> <span class="text-xs text-slate-400">uds</span>
+                        </td>
+                    </tr>
                     @empty
-                        <tr>
-                            <td colspan="6" class="px-6 py-16 text-center text-slate-400">
-                                <i class="fas fa-history text-4xl mb-3 block opacity-20"></i>
-                                <p class="text-sm">No hay movimientos registrados en el Kardex aún.</p>
-                            </td>
-                        </tr>
+                    <tr>
+                        <td colspan="6" class="px-6 py-16 text-center text-slate-400">
+                            <i class="fas fa-history text-4xl mb-3 block opacity-20"></i>
+                            <p class="text-sm">No hay movimientos registrados en el Kardex aún.</p>
+                        </td>
+                    </tr>
                     @endforelse
                 </tbody>
             </table>

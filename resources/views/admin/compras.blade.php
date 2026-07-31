@@ -65,6 +65,7 @@
             opacity: 0;
             transform: scale(.97)
         }
+
         to {
             opacity: 1;
             transform: scale(1)
@@ -93,8 +94,8 @@
             </div>
             <h1 class="text-xl md:text-2xl font-serif font-bold text-brand-dark">Abastecimiento (Compras)</h1>
         </div>
-        <button onclick="openModal()" 
-            class="flex items-center gap-2 px-4 py-2.5 bg-brand-accent text-white text-sm font-semibold rounded-xl hover:shadow-lg hover:-translate-y-0.5 transition-all" 
+        <button onclick="openModal()"
+            class="flex items-center gap-2 px-4 py-2.5 bg-brand-accent text-white text-sm font-semibold rounded-xl hover:shadow-lg hover:-translate-y-0.5 transition-all"
             style="box-shadow: 0 4px 12px rgba(59,130,246,.25);">
             <i class="fas fa-plus text-xs"></i> <span>Registrar compra</span>
         </button>
@@ -158,31 +159,31 @@
                 <thead>
                     <tr>
                         @foreach (['ID', 'Fecha', 'Proveedor', 'Registrado Por', 'Total', 'Acciones'] as $h)
-                            <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide bg-slate-50 border-b border-slate-100">{{ $h }}</th>
+                        <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide bg-slate-50 border-b border-slate-100">{{ $h }}</th>
                         @endforeach
                     </tr>
                 </thead>
                 <tbody id="table-body">
                     @forelse ($compras as $c)
-                        <tr class="trow cursor-pointer" onclick="verDetalle({{ $c->id }})" data-search="{{ strtolower($c->proveedor->nombre ?? '') }}">
-                            <td class="px-6 py-4 border-b border-slate-50 text-sm font-mono text-slate-500">#{{ $c->id }}</td>
-                            <td class="px-6 py-4 border-b border-slate-50 text-sm text-slate-700">{{ $c->fecha instanceof \Carbon\Carbon ? $c->fecha->format('d/m/Y H:i') : ($c->fecha ? date('d/m/Y H:i', strtotime($c->fecha)) : '—') }}</td>
-                            <td class="px-6 py-4 border-b border-slate-50 text-sm font-semibold text-slate-800">{{ $c->proveedor->nombre ?? '—' }}</td>
-                            <td class="px-6 py-4 border-b border-slate-50 text-sm text-slate-600">{{ $c->usuario->name ?? '—' }}</td>
-                            <td class="px-6 py-4 border-b border-slate-50 text-sm font-bold text-slate-800">${{ number_format($c->total, 2) }}</td>
-                            <td class="px-6 py-4 border-b border-slate-50 text-xs text-blue-500">
-                                <span class="w-8 h-8 bg-blue-50 rounded-lg flex items-center justify-center hover:bg-blue-100 transition">
-                                    <i class="fas fa-eye text-sm"></i>
-                                </span>
-                            </td>
-                        </tr>
+                    <tr class="trow cursor-pointer" onclick="verDetalle({{ $c->id }})" data-search="{{ strtolower($c->proveedor->nombre ?? '') }}">
+                        <td class="px-6 py-4 border-b border-slate-50 text-sm font-mono text-slate-500">#{{ $c->id }}</td>
+                        <td class="px-6 py-4 border-b border-slate-50 text-sm text-slate-700">{{ $c->fecha instanceof \Carbon\Carbon ? $c->fecha->format('d/m/Y H:i') : ($c->fecha ? date('d/m/Y H:i', strtotime($c->fecha)) : '—') }}</td>
+                        <td class="px-6 py-4 border-b border-slate-50 text-sm font-semibold text-slate-800">{{ $c->proveedor->nombre ?? '—' }}</td>
+                        <td class="px-6 py-4 border-b border-slate-50 text-sm text-slate-600">{{ $c->usuario->name ?? '—' }}</td>
+                        <td class="px-6 py-4 border-b border-slate-50 text-sm font-bold text-slate-800">${{ number_format($c->total, 2) }}</td>
+                        <td class="px-6 py-4 border-b border-slate-50 text-xs text-blue-500">
+                            <span class="w-8 h-8 bg-blue-50 rounded-lg flex items-center justify-center hover:bg-blue-100 transition">
+                                <i class="fas fa-eye text-sm"></i>
+                            </span>
+                        </td>
+                    </tr>
                     @empty
-                        <tr>
-                            <td colspan="6" class="px-6 py-16 text-center text-slate-400">
-                                <i class="fas fa-truck text-4xl mb-3 block opacity-20"></i>
-                                <p class="text-sm">No hay compras registradas aún</p>
-                            </td>
-                        </tr>
+                    <tr>
+                        <td colspan="6" class="px-6 py-16 text-center text-slate-400">
+                            <i class="fas fa-truck text-4xl mb-3 block opacity-20"></i>
+                            <p class="text-sm">No hay compras registradas aún</p>
+                        </td>
+                    </tr>
                     @endforelse
                 </tbody>
             </table>
@@ -214,7 +215,7 @@
                 <select id="sel-proveedor" class="w-full px-4 py-2.5 bg-slate-50 border-2 border-slate-200 rounded-xl text-sm text-slate-700 focus:outline-none transition">
                     <option value="">Seleccionar proveedor...</option>
                     @foreach ($proveedores as $p)
-                        <option value="{{ $p->id }}">{{ $p->nombre }} ({{ $p->contacto }})</option>
+                    <option value="{{ $p->id }}">{{ $p->nombre }} ({{ $p->contacto }})</option>
                     @endforeach
                 </select>
             </div>
@@ -224,14 +225,14 @@
                     <select id="sel-producto" class="flex-1 min-w-[200px] px-4 py-2.5 bg-slate-50 border-2 border-slate-200 rounded-xl text-sm text-slate-700 focus:outline-none transition">
                         <option value="">Seleccionar producto...</option>
                         @foreach ($productos as $p)
-                            <option value="{{ $p->id }}" data-precio="{{ $p->precio_compra }}">
-                                {{ $p->nombre }} ({{ $p->talla }}/{{ $p->color }})
-                            </option>
+                        <option value="{{ $p->id }}" data-precio="{{ $p->precio_compra }}">
+                            {{ $p->nombre }} ({{ $p->talla }}/{{ $p->color }})
+                        </option>
                         @endforeach
                     </select>
-                    <input type="number" id="inp-qty" placeholder="Cant." min="1" 
+                    <input type="number" id="inp-qty" placeholder="Cant." min="1"
                         class="w-20 px-3 py-2.5 bg-slate-50 border-2 border-slate-200 rounded-xl text-sm text-slate-700 focus:outline-none transition">
-                    <input type="number" id="inp-precio" placeholder="Precio" min="0" step="0.01" 
+                    <input type="number" id="inp-precio" placeholder="Precio" min="0" step="0.01"
                         class="w-28 px-3 py-2.5 bg-slate-50 border-2 border-slate-200 rounded-xl text-sm text-slate-700 focus:outline-none transition">
                     <button onclick="agregarItem()" class="px-4 py-2.5 bg-brand-accent text-white text-sm font-semibold rounded-xl hover:shadow-md transition">
                         <i class="fas fa-plus text-xs"></i>
@@ -294,7 +295,7 @@
     function filterTable() {
         const q = document.getElementById('search-input').value.toLowerCase();
         let visible = 0;
-        
+
         document.querySelectorAll('#table-body tr').forEach(row => {
             if (row.dataset.search) {
                 const show = !q || row.dataset.search.includes(q);
@@ -410,65 +411,65 @@
         fd.append('_token', '{{ csrf_token() }}');
 
         fetch(STORE_URL, {
-            method: 'POST',
-            body: fd,
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            }
-        })
-        .then(async r => {
-            if (!r.ok) {
-                const txt = await r.text();
-                throw new Error(txt);
-            }
-            return r.json();
-        })
-        .then(d => {
-            if (d.ok) {
-                closeModal();
-                Swal.fire({
-                    icon: 'success',
-                    title: '¡Compra Registrada!',
-                    text: d.msg,
-                    confirmButtonColor: '#2563eb',
-                    confirmButtonText: 'Excelente'
-                }).then(() => {
-                    location.reload();
-                });
-            } else {
+                method: 'POST',
+                body: fd,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(async r => {
+                if (!r.ok) {
+                    const txt = await r.text();
+                    throw new Error(txt);
+                }
+                return r.json();
+            })
+            .then(d => {
+                if (d.ok) {
+                    closeModal();
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Compra Registrada!',
+                        text: d.msg,
+                        confirmButtonColor: '#2563eb',
+                        confirmButtonText: 'Excelente'
+                    }).then(() => {
+                        location.reload();
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Atención',
+                        text: d.msg,
+                        confirmButtonColor: '#2563eb'
+                    });
+                }
+            })
+            .catch(err => {
+                console.error(err);
                 Swal.fire({
                     icon: 'error',
-                    title: 'Atención',
-                    text: d.msg,
-                    confirmButtonColor: '#2563eb'
+                    title: 'Error del Servidor',
+                    text: err.message.substring(0, 200) || 'Ocurrió un error inesperado al procesar la compra.'
                 });
-            }
-        })
-        .catch(err => {
-            console.error(err);
-            Swal.fire({
-                icon: 'error',
-                title: 'Error del Servidor',
-                text: err.message.substring(0, 200) || 'Ocurrió un error inesperado al procesar la compra.'
             });
-        });
     }
 
     // ── Ver detalles de compra (FETCH AJAX) ─────────────────────────────────────────
     function verDetalle(id) {
         // Prevenir que haga trigger el modal al hacer click en acciones secundarias
         fetch(`${BASE_URL}/${id}`, {
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            }
-        })
-        .then(r => r.json())
-        .then(detalles => {
-            const body = document.getElementById('det-body');
-            if (!detalles.length) {
-                body.innerHTML = '<p class="text-slate-400 text-sm text-center py-8">Sin detalle disponible</p>';
-            } else {
-                body.innerHTML = `
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(r => r.json())
+            .then(detalles => {
+                const body = document.getElementById('det-body');
+                if (!detalles.length) {
+                    body.innerHTML = '<p class="text-slate-400 text-sm text-center py-8">Sin detalle disponible</p>';
+                } else {
+                    body.innerHTML = `
                     <div class="overflow-x-auto">
                         <table class="w-full text-sm text-left whitespace-nowrap">
                             <thead>
@@ -494,12 +495,12 @@
                         </table>
                     </div>
                 `;
-            }
-            document.getElementById('modal-det').classList.remove('hidden');
-        })
-        .catch(err => {
-            showToast('Error al cargar detalles de la compra.', 'error');
-        });
+                }
+                document.getElementById('modal-det').classList.remove('hidden');
+            })
+            .catch(err => {
+                showToast('Error al cargar detalles de la compra.', 'error');
+            });
     }
 
     // Alertas Toast mediante SweetAlert2
@@ -516,10 +517,10 @@
     }
 
     // Notificaciones de Laravel session redirect
-    @if (session('toast'))
-        document.addEventListener('DOMContentLoaded', () => {
-            showToast(@json(session('toast')['text']), @json(session('toast')['type']));
-        });
+    @if(session('toast'))
+    document.addEventListener('DOMContentLoaded', () => {
+        showToast(@json(session('toast')['text']), @json(session('toast')['type']));
+    });
     @endif
 </script>
 @endpush

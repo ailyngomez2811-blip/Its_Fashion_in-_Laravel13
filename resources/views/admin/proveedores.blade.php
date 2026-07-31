@@ -50,6 +50,7 @@
             opacity: 0;
             transform: scale(.97)
         }
+
         to {
             opacity: 1;
             transform: scale(1)
@@ -79,8 +80,8 @@
             <h1 class="text-xl md:text-2xl font-serif font-bold text-brand-dark">Proveedores</h1>
         </div>
         @if (auth()->user()->rol_id === 1)
-        <button onclick="openModal('create')" 
-            class="flex items-center gap-2 px-4 py-2.5 bg-brand-accent text-white text-sm font-semibold rounded-xl hover:shadow-lg hover:-translate-y-0.5 transition-all" 
+        <button onclick="openModal('create')"
+            class="flex items-center gap-2 px-4 py-2.5 bg-brand-accent text-white text-sm font-semibold rounded-xl hover:shadow-lg hover:-translate-y-0.5 transition-all"
             style="box-shadow: 0 4px 12px rgba(59,130,246,.25);">
             <i class="fas fa-plus text-xs"></i> <span>Nuevo proveedor</span>
         </button>
@@ -108,49 +109,49 @@
                 <thead>
                     <tr>
                         @foreach (['Proveedor', 'Contacto', 'Teléfono', 'Email', 'Documento', ''] as $h)
-                            <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide bg-slate-50 border-b border-slate-100">{{ $h }}</th>
+                        <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide bg-slate-50 border-b border-slate-100">{{ $h }}</th>
                         @endforeach
                     </tr>
                 </thead>
                 <tbody id="table-body">
                     @forelse ($proveedores as $p)
-                        <tr class="trow" id="prov-{{ $p->id }}" data-search="{{ strtolower($p->nombre . ' ' . $p->documento) }}">
-                            <td class="px-6 py-4 border-b border-slate-50">
-                                <p class="font-semibold text-slate-800 text-sm">{{ $p->nombre }}</p>
-                                <p class="text-xs text-slate-400">{{ $p->direccion ?? '' }}</p>
-                            </td>
-                            <td class="px-6 py-4 border-b border-slate-50 text-sm text-slate-700">{{ $p->contacto }}</td>
-                            <td class="px-6 py-4 border-b border-slate-50 text-sm text-slate-700">{{ $p->telefono }}</td>
-                            <td class="px-6 py-4 border-b border-slate-50 text-sm text-slate-505 text-slate-500">{{ $p->email ?? '—' }}</td>
-                            <td class="px-6 py-4 border-b border-slate-50">
-                                <span class="inline-flex items-center px-2.5 py-1 bg-slate-100 text-slate-600 rounded-lg text-xs font-mono">{{ $p->documento }}</span>
-                            </td>
-                            <td class="px-6 py-4 border-b border-slate-50">
-                                @if (auth()->user()->rol_id === 1)
-                                    <div class="flex items-center gap-2">
-                                        <!-- Botón Editar -->
-                                        <button onclick="openModal('edit', @json($p))"
-                                            class="w-8 h-8 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center transition"
-                                            title="Editar proveedor">
-                                            <i class="fas fa-edit text-xs"></i>
-                                        </button>
-                                        <!-- Botón Eliminar -->
-                                        <button onclick="eliminarProv({{ $p->id }}, '{{ addslashes($p->nombre) }}')"
-                                            class="w-8 h-8 bg-red-50 hover:bg-red-100 text-red-500 rounded-lg flex items-center justify-center transition"
-                                            title="Eliminar proveedor">
-                                            <i class="fas fa-trash text-xs"></i>
-                                        </button>
-                                    </div>
-                                @endif
-                            </td>
-                        </tr>
+                    <tr class="trow" id="prov-{{ $p->id }}" data-search="{{ strtolower($p->nombre . ' ' . $p->documento) }}">
+                        <td class="px-6 py-4 border-b border-slate-50">
+                            <p class="font-semibold text-slate-800 text-sm">{{ $p->nombre }}</p>
+                            <p class="text-xs text-slate-400">{{ $p->direccion ?? '' }}</p>
+                        </td>
+                        <td class="px-6 py-4 border-b border-slate-50 text-sm text-slate-700">{{ $p->contacto }}</td>
+                        <td class="px-6 py-4 border-b border-slate-50 text-sm text-slate-700">{{ $p->telefono }}</td>
+                        <td class="px-6 py-4 border-b border-slate-50 text-sm text-slate-505 text-slate-500">{{ $p->email ?? '—' }}</td>
+                        <td class="px-6 py-4 border-b border-slate-50">
+                            <span class="inline-flex items-center px-2.5 py-1 bg-slate-100 text-slate-600 rounded-lg text-xs font-mono">{{ $p->documento }}</span>
+                        </td>
+                        <td class="px-6 py-4 border-b border-slate-50">
+                            @if (auth()->user()->rol_id === 1)
+                            <div class="flex items-center gap-2">
+                                <!-- Botón Editar -->
+                                <button onclick="openModal('edit', @json($p))"
+                                    class="w-8 h-8 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center transition"
+                                    title="Editar proveedor">
+                                    <i class="fas fa-edit text-xs"></i>
+                                </button>
+                                <!-- Botón Eliminar -->
+                                <button onclick="eliminarProv({{ $p->id }}, '{{ addslashes($p->nombre) }}')"
+                                    class="w-8 h-8 bg-red-50 hover:bg-red-100 text-red-500 rounded-lg flex items-center justify-center transition"
+                                    title="Eliminar proveedor">
+                                    <i class="fas fa-trash text-xs"></i>
+                                </button>
+                            </div>
+                            @endif
+                        </td>
+                    </tr>
                     @empty
-                        <tr>
-                            <td colspan="6" class="px-6 py-16 text-center text-slate-400">
-                                <i class="fas fa-truck text-4xl mb-3 block opacity-20"></i>
-                                <p class="text-sm">No hay proveedores registrados aún</p>
-                            </td>
-                        </tr>
+                    <tr>
+                        <td colspan="6" class="px-6 py-16 text-center text-slate-400">
+                            <i class="fas fa-truck text-4xl mb-3 block opacity-20"></i>
+                            <p class="text-sm">No hay proveedores registrados aún</p>
+                        </td>
+                    </tr>
                     @endforelse
                 </tbody>
             </table>
@@ -244,7 +245,7 @@
     function filterTable() {
         const q = document.getElementById('search-input').value.toLowerCase();
         let visible = 0;
-        
+
         document.querySelectorAll('#table-body tr').forEach(row => {
             if (row.dataset.search) {
                 const show = !q || row.dataset.search.includes(q);
@@ -257,7 +258,8 @@
     }
 
     // ── Modal Apertura y Cierre ────────────────────────────────────────────────────
-    @if (auth()->user()->rol_id === 1)
+    @if(auth() - > user() - > rol_id === 1)
+
     function openModal(mode, data = null) {
         const modal = document.getElementById('modal-prov');
         const form = document.getElementById('form-prov');
@@ -282,7 +284,7 @@
             document.getElementById('prov-tel').value = data.telefono;
             document.getElementById('prov-email').value = data.email || '';
             document.getElementById('prov-dir').value = data.direccion || '';
-            
+
             title.textContent = 'Editar proveedor';
             btnText.textContent = 'Actualizar';
             modal.classList.remove('hidden');
@@ -344,23 +346,23 @@
     }
 
     // Notificaciones flash de redirección (Laravel session)
-    @if (session('toast'))
-        document.addEventListener('DOMContentLoaded', () => {
-            showToast(@json(session('toast')['text']), @json(session('toast')['type']));
-        });
+    @if(session('toast'))
+    document.addEventListener('DOMContentLoaded', () => {
+        showToast(@json(session('toast')['text']), @json(session('toast')['type']));
+    });
     @endif
 
     // Notificaciones de errores de validación de backend
-    @if ($errors->any())
-        document.addEventListener('DOMContentLoaded', () => {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error de Validación',
-                html: `{!! implode('<br>', $errors->all()) !!}`,
-                confirmButtonColor: '#2563eb',
-                confirmButtonText: 'Entendido'
-            });
+    @if($errors - > any())
+    document.addEventListener('DOMContentLoaded', () => {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error de Validación',
+            html: `{!! implode('<br>', $errors->all()) !!}`,
+            confirmButtonColor: '#2563eb',
+            confirmButtonText: 'Entendido'
         });
+    });
     @endif
 </script>
 @endpush

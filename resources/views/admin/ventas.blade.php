@@ -65,6 +65,7 @@
             opacity: 0;
             transform: scale(.97)
         }
+
         to {
             opacity: 1;
             transform: scale(1)
@@ -103,18 +104,18 @@
             </div>
             <h1 class="text-xl md:text-2xl font-serif font-bold text-brand-dark">Ventas</h1>
         </div>
-        
+
         @if ($cajaAbierta)
-            <button onclick="openModal()" 
-                class="flex items-center gap-2 px-4 py-2.5 bg-brand-accent text-white text-sm font-semibold rounded-xl hover:shadow-lg hover:-translate-y-0.5 transition-all" 
-                style="box-shadow: 0 4px 12px rgba(59,130,246,.25);">
-                <i class="fas fa-plus text-xs"></i> <span>Nueva venta</span>
-            </button>
+        <button onclick="openModal()"
+            class="flex items-center gap-2 px-4 py-2.5 bg-brand-accent text-white text-sm font-semibold rounded-xl hover:shadow-lg hover:-translate-y-0.5 transition-all"
+            style="box-shadow: 0 4px 12px rgba(59,130,246,.25);">
+            <i class="fas fa-plus text-xs"></i> <span>Nueva venta</span>
+        </button>
         @else
-            <button onclick="mostrarAdvertenciaCaja()" 
-                class="flex items-center gap-2 px-4 py-2.5 bg-slate-400 text-white text-sm font-semibold rounded-xl cursor-not-allowed hover:shadow-md transition-all">
-                <i class="fas fa-plus text-xs"></i> <span>Nueva venta (Caja cerrada)</span>
-            </button>
+        <button onclick="mostrarAdvertenciaCaja()"
+            class="flex items-center gap-2 px-4 py-2.5 bg-slate-400 text-white text-sm font-semibold rounded-xl cursor-not-allowed hover:shadow-md transition-all">
+            <i class="fas fa-plus text-xs"></i> <span>Nueva venta (Caja cerrada)</span>
+        </button>
         @endif
     </div>
 
@@ -180,17 +181,17 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
                 <div>
                     <label class="text-[10px] font-bold text-slate-500 uppercase block mb-1.5">Fecha desde</label>
-                    <input type="date" id="filter-desde" onchange="filterTable()" 
+                    <input type="date" id="filter-desde" onchange="filterTable()"
                         class="w-full py-2 px-3 bg-slate-50 border-2 border-slate-200 rounded-xl text-sm text-slate-700 focus:outline-none transition">
                 </div>
                 <div>
                     <label class="text-[10px] font-bold text-slate-500 uppercase block mb-1.5">Fecha hasta</label>
-                    <input type="date" id="filter-hasta" onchange="filterTable()" 
+                    <input type="date" id="filter-hasta" onchange="filterTable()"
                         class="w-full py-2 px-3 bg-slate-50 border-2 border-slate-200 rounded-xl text-sm text-slate-700 focus:outline-none transition">
                 </div>
                 <div>
                     <label class="text-[10px] font-bold text-slate-500 uppercase block mb-1.5">Método de pago</label>
-                    <select id="filter-metodo" onchange="filterTable()" 
+                    <select id="filter-metodo" onchange="filterTable()"
                         class="w-full py-2 px-3 bg-slate-50 border-2 border-slate-200 rounded-xl text-sm text-slate-700 cursor-pointer focus:outline-none transition">
                         <option value="">Todos los métodos</option>
                         <option value="Efectivo">Efectivo</option>
@@ -199,7 +200,7 @@
                 </div>
                 <div>
                     <label class="text-[10px] font-bold text-slate-500 uppercase block mb-1.5">Estado</label>
-                    <select id="filter-estado" onchange="filterTable()" 
+                    <select id="filter-estado" onchange="filterTable()"
                         class="w-full py-2 px-3 bg-slate-50 border-2 border-slate-200 rounded-xl text-sm text-slate-700 cursor-pointer focus:outline-none transition">
                         <option value="">Todos los estados</option>
                         <option value="Completada">Completada</option>
@@ -214,51 +215,51 @@
                 <thead>
                     <tr>
                         @foreach (['#', 'Fecha', 'Cliente', 'Empleado', 'Método', 'Total', 'Estado', 'Acciones'] as $h)
-                            <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide bg-slate-50 border-b border-slate-100">{{ $h }}</th>
+                        <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide bg-slate-50 border-b border-slate-100">{{ $h }}</th>
                         @endforeach
                     </tr>
                 </thead>
                 <tbody id="table-body">
                     @forelse ($ventas as $v)
-                        <tr class="trow cursor-pointer text-slate-700" id="vrow-{{ $v->id }}"
-                            data-metodo="{{ $v->metodo_pago }}"
-                            data-estado="{{ $v->estado }}"
-                            data-fecha="{{ $v->fecha ? $v->fecha->format('Y-m-d') : '' }}"
-                            onclick="verDetalle({{ $v->id }})">
-                            <td class="px-6 py-4 border-b border-slate-50 text-sm font-mono text-slate-500">#{{ $v->id }}</td>
-                            <td class="px-6 py-4 border-b border-slate-50 text-sm text-slate-700">{{ $v->fecha ? $v->fecha->format('d/m/Y H:i') : '—' }}</td>
-                            <td class="px-6 py-4 border-b border-slate-50 text-sm font-medium text-slate-800">{{ $v->cliente->nombre ?? 'Mostrador' }} {{ $v->cliente->apellido ?? '' }}</td>
-                            <td class="px-6 py-4 border-b border-slate-50 text-sm text-slate-600">{{ $v->usuario->nombre ?? '—' }} {{ $v->usuario->apellido ?? '' }}</td>
-                            <td class="px-6 py-4 border-b border-slate-50">
-                                <span class="badge {{ $v->metodo_pago === 'Efectivo' ? 'bg-emerald-100 text-emerald-700' : 'bg-blue-100 text-blue-700' }}">
-                                    <i class="fas {{ $v->metodo_pago === 'Efectivo' ? 'fa-money-bill' : 'fa-university' }} mr-1 text-xs"></i>
-                                    {{ $v->metodo_pago }}
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 border-b border-slate-50 text-sm font-bold text-slate-800">${{ number_format($v->total, 2) }}</td>
-                            <td class="px-6 py-4 border-b border-slate-50">
-                                <span class="badge {{ $v->estado === 'Completada' ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700' }}">{{ $v->estado }}</span>
-                            </td>
-                            <td class="px-6 py-4 border-b border-slate-50" onclick="event.stopPropagation()">
-                                <div class="flex items-center gap-2">
-                                    <button onclick="verDetalle({{ $v->id }})" class="w-8 h-8 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center transition" title="Ver detalle">
-                                        <i class="fas fa-eye text-xs"></i>
-                                    </button>
-                                    @if ($v->estado === 'Completada')
-                                        <button onclick="openDevolucion({{ $v->id }})" class="w-8 h-8 bg-red-50 hover:bg-red-100 text-red-500 rounded-lg flex items-center justify-center transition" title="Solicitar Devolución">
-                                            <i class="fas fa-undo-alt text-xs"></i>
-                                        </button>
-                                    @endif
-                                </div>
-                            </td>
-                        </tr>
+                    <tr class="trow cursor-pointer text-slate-700" id="vrow-{{ $v->id }}"
+                        data-metodo="{{ $v->metodo_pago }}"
+                        data-estado="{{ $v->estado }}"
+                        data-fecha="{{ $v->fecha ? $v->fecha->format('Y-m-d') : '' }}"
+                        onclick="verDetalle({{ $v->id }})">
+                        <td class="px-6 py-4 border-b border-slate-50 text-sm font-mono text-slate-500">#{{ $v->id }}</td>
+                        <td class="px-6 py-4 border-b border-slate-50 text-sm text-slate-700">{{ $v->fecha ? $v->fecha->format('d/m/Y H:i') : '—' }}</td>
+                        <td class="px-6 py-4 border-b border-slate-50 text-sm font-medium text-slate-800">{{ $v->cliente->nombre ?? 'Mostrador' }} {{ $v->cliente->apellido ?? '' }}</td>
+                        <td class="px-6 py-4 border-b border-slate-50 text-sm text-slate-600">{{ $v->usuario->nombre ?? '—' }} {{ $v->usuario->apellido ?? '' }}</td>
+                        <td class="px-6 py-4 border-b border-slate-50">
+                            <span class="badge {{ $v->metodo_pago === 'Efectivo' ? 'bg-emerald-100 text-emerald-700' : 'bg-blue-100 text-blue-700' }}">
+                                <i class="fas {{ $v->metodo_pago === 'Efectivo' ? 'fa-money-bill' : 'fa-university' }} mr-1 text-xs"></i>
+                                {{ $v->metodo_pago }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 border-b border-slate-50 text-sm font-bold text-slate-800">${{ number_format($v->total, 2) }}</td>
+                        <td class="px-6 py-4 border-b border-slate-50">
+                            <span class="badge {{ $v->estado === 'Completada' ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700' }}">{{ $v->estado }}</span>
+                        </td>
+                        <td class="px-6 py-4 border-b border-slate-50" onclick="event.stopPropagation()">
+                            <div class="flex items-center gap-2">
+                                <button onclick="verDetalle({{ $v->id }})" class="w-8 h-8 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center transition" title="Ver detalle">
+                                    <i class="fas fa-eye text-xs"></i>
+                                </button>
+                                @if ($v->estado === 'Completada')
+                                <button onclick="openDevolucion({{ $v->id }})" class="w-8 h-8 bg-red-50 hover:bg-red-100 text-red-500 rounded-lg flex items-center justify-center transition" title="Solicitar Devolución">
+                                    <i class="fas fa-undo-alt text-xs"></i>
+                                </button>
+                                @endif
+                            </div>
+                        </td>
+                    </tr>
                     @empty
-                        <tr>
-                            <td colspan="8" class="px-6 py-16 text-center text-slate-400">
-                                <i class="fas fa-shopping-cart text-4xl mb-3 block opacity-20"></i>
-                                <p class="text-sm">No hay ventas registradas aún</p>
-                            </td>
-                        </tr>
+                    <tr>
+                        <td colspan="8" class="px-6 py-16 text-center text-slate-400">
+                            <i class="fas fa-shopping-cart text-4xl mb-3 block opacity-20"></i>
+                            <p class="text-sm">No hay ventas registradas aún</p>
+                        </td>
+                    </tr>
                     @endforelse
                 </tbody>
             </table>
@@ -296,7 +297,7 @@
                 </div>
                 <!-- Caja de resultados -->
                 <div id="cliente-results" class="hidden absolute left-0 right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-lg overflow-hidden z-50"></div>
-                
+
                 <!-- Cliente seleccionado -->
                 <div id="cliente-sel" class="hidden mt-2 p-3 bg-blue-50 border border-blue-200 rounded-xl text-xs text-blue-700 flex items-center justify-between">
                     <span id="cliente-sel-nombre" class="font-semibold"></span>
@@ -320,14 +321,14 @@
                     <select id="sel-producto" class="flex-1 min-w-[200px] px-4 py-2.5 bg-slate-50 border-2 border-slate-200 rounded-xl text-sm text-slate-700 focus:outline-none transition">
                         <option value="">Seleccionar producto...</option>
                         @foreach ($productos as $p)
-                            @if ($p->estado === 'Activo' && $p->stock > 0)
-                                <option value="{{ $p->id }}" data-precio="{{ $p->precio_venta }}" data-stock="{{ $p->stock }}">
-                                    {{ $p->nombre }} ({{ $p->talla }}/{{ $p->color }}) — Stock: {{ $p->stock }}
-                                </option>
-                            @endif
+                        @if ($p->estado === 'Activo' && $p->stock > 0)
+                        <option value="{{ $p->id }}" data-precio="{{ $p->precio_venta }}" data-stock="{{ $p->stock }}">
+                            {{ $p->nombre }} ({{ $p->talla }}/{{ $p->color }}) — Stock: {{ $p->stock }}
+                        </option>
+                        @endif
                         @endforeach
                     </select>
-                    <input type="number" id="inp-qty" placeholder="Cant." min="1" 
+                    <input type="number" id="inp-qty" placeholder="Cant." min="1"
                         class="w-20 px-3 py-2.5 bg-slate-50 border-2 border-slate-200 rounded-xl text-sm text-slate-700 focus:outline-none transition">
                     <button onclick="agregarItem()" class="px-4 py-2.5 bg-brand-accent text-white text-sm font-semibold rounded-xl hover:shadow-md transition">
                         <i class="fas fa-plus text-xs"></i>
@@ -383,7 +384,7 @@
         </div>
         <div class="p-6 overflow-y-auto flex-1 space-y-4">
             <p class="text-sm text-slate-600">Registrar devolución para la venta <strong id="dev-venta-id-txt"></strong>.</p>
-            
+
             <h4 class="text-xs font-bold text-slate-500 uppercase mb-2">Productos de la Venta</h4>
             <div class="overflow-x-auto mb-4 border border-slate-100 rounded-xl">
                 <table class="w-full text-xs">
@@ -402,7 +403,7 @@
 
             <div>
                 <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Motivo de Devolución *</label>
-                <textarea id="dev-motivo" rows="2" placeholder="Explique el motivo de la devolución..." 
+                <textarea id="dev-motivo" rows="2" placeholder="Explique el motivo de la devolución..."
                     class="w-full px-4 py-2.5 bg-slate-50 border-2 border-slate-200 rounded-xl text-sm text-slate-700 focus:outline-none focus:border-brand-accent resize-none transition"></textarea>
             </div>
 
@@ -427,30 +428,30 @@
     const BASE_URL = "{{ url('/ventas') }}";
     const CLIENTES_SEARCH_URL = "{{ route('ventas.buscar-cliente') }}";
     const DEVOLUCIONES_STORE_URL = "{{ route('devoluciones.store') }}";
-    
+
     let devVentaId = null;
 
     function openDevolucion(id) {
         devVentaId = id;
         document.getElementById('dev-venta-id-txt').textContent = '#' + id;
         document.getElementById('dev-motivo').value = '';
-        
+
         const tbody = document.getElementById('dev-productos-body');
         tbody.innerHTML = '<tr><td colspan="3" class="text-center py-4 text-slate-400"><i class="fas fa-spinner fa-spin mr-2"></i>Cargando productos...</td></tr>';
         document.getElementById('modal-devolucion').classList.remove('hidden');
 
         fetch(`${BASE_URL}/${id}`, {
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            }
-        })
-        .then(r => r.json())
-        .then(detalles => {
-            if (!detalles || !detalles.length) {
-                tbody.innerHTML = '<tr><td colspan="3" class="text-center py-4 text-red-500">No se pudieron cargar los productos</td></tr>';
-                return;
-            }
-            tbody.innerHTML = detalles.map(i => `
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(r => r.json())
+            .then(detalles => {
+                if (!detalles || !detalles.length) {
+                    tbody.innerHTML = '<tr><td colspan="3" class="text-center py-4 text-red-500">No se pudieron cargar los productos</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = detalles.map(i => `
                 <tr class="border-b border-slate-50 last:border-b-0 py-2 trow text-slate-700">
                     <td class="py-2.5 px-3 text-left font-medium text-slate-700">${i.producto} <span class="text-slate-400">(${i.talla}/${i.color})</span></td>
                     <td class="text-center py-2.5 px-3 text-slate-600">${i.cantidad}</td>
@@ -461,10 +462,10 @@
                     </td>
                 </tr>
             `).join('');
-        })
-        .catch(err => {
-            tbody.innerHTML = '<tr><td colspan="3" class="text-center py-4 text-red-500">Error al cargar productos</td></tr>';
-        });
+            })
+            .catch(err => {
+                tbody.innerHTML = '<tr><td colspan="3" class="text-center py-4 text-red-500">Error al cargar productos</td></tr>';
+            });
     }
 
     function closeModalDevolucion() {
@@ -503,48 +504,48 @@
         fd.append('_token', '{{ csrf_token() }}');
 
         fetch(DEVOLUCIONES_STORE_URL, {
-            method: 'POST',
-            body: fd,
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            }
-        })
-        .then(async r => {
-            if (!r.ok) {
-                const txt = await r.text();
-                throw new Error(txt);
-            }
-            return r.json();
-        })
-        .then(d => {
-            if (d.ok) {
-                closeModalDevolucion();
-                Swal.fire({
-                    icon: 'success',
-                    title: '¡Solicitud Registrada!',
-                    text: d.msg,
-                    confirmButtonColor: '#2563eb',
-                    confirmButtonText: 'Entendido'
-                }).then(() => {
-                    location.reload();
-                });
-            } else {
+                method: 'POST',
+                body: fd,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(async r => {
+                if (!r.ok) {
+                    const txt = await r.text();
+                    throw new Error(txt);
+                }
+                return r.json();
+            })
+            .then(d => {
+                if (d.ok) {
+                    closeModalDevolucion();
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Solicitud Registrada!',
+                        text: d.msg,
+                        confirmButtonColor: '#2563eb',
+                        confirmButtonText: 'Entendido'
+                    }).then(() => {
+                        location.reload();
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Atención',
+                        text: d.msg,
+                        confirmButtonColor: '#2563eb'
+                    });
+                }
+            })
+            .catch(err => {
+                console.error(err);
                 Swal.fire({
                     icon: 'error',
-                    title: 'Atención',
-                    text: d.msg,
-                    confirmButtonColor: '#2563eb'
+                    title: 'Error del Servidor',
+                    text: err.message.substring(0, 200) || 'Ocurrió un error inesperado al procesar la devolución.'
                 });
-            }
-        })
-        .catch(err => {
-            console.error(err);
-            Swal.fire({
-                icon: 'error',
-                title: 'Error del Servidor',
-                text: err.message.substring(0, 200) || 'Ocurrió un error inesperado al procesar la devolución.'
             });
-        });
     }
 
     function closeModalDevolucion() {
@@ -552,7 +553,7 @@
         devVentaId = null;
     }
 
-    
+
     let items = [];
     let clienteId = null;
     let clienteTimer;
@@ -574,18 +575,18 @@
         const hasta = document.getElementById('filter-hasta').value;
         const metodo = document.getElementById('filter-metodo').value;
         const estado = document.getElementById('filter-estado').value;
-        
+
         let total = 0;
         let filtrados = 0;
 
         document.querySelectorAll('#table-body tr[id^="vrow-"]').forEach(row => {
             total++;
             const fecha = row.dataset.fecha;
-            
+
             const show = (!metodo || row.dataset.metodo === metodo) &&
-                         (!estado || row.dataset.estado === estado) &&
-                         (!desde || fecha >= desde) &&
-                         (!hasta || fecha <= hasta);
+                (!estado || row.dataset.estado === estado) &&
+                (!desde || fecha >= desde) &&
+                (!hasta || fecha <= hasta);
 
             row.style.display = show ? '' : 'none';
             if (show) filtrados++;
@@ -596,7 +597,8 @@
     }
 
     // ── Apertura y Cierre de Modales ────────────────────────────────────────────────
-    @if ($cajaAbierta)
+    @if($cajaAbierta)
+
     function openModal() {
         items = [];
         clienteId = null;
@@ -619,13 +621,15 @@
     // Cerrar modales con escape
     document.addEventListener('keydown', e => {
         if (e.key === 'Escape') {
-            @if ($cajaAbierta) closeModal(); @endif
+            @if($cajaAbierta) closeModal();
+            @endif
             closeDet();
         }
     });
 
     // ── Buscar y autocompletar Clientes ─────────────────────────────────────────────
-    @if ($cajaAbierta)
+    @if($cajaAbierta)
+
     function buscarCliente(q) {
         clearTimeout(clienteTimer);
         if (q.trim().length < 2) {
@@ -635,24 +639,24 @@
 
         clienteTimer = setTimeout(() => {
             fetch(`${CLIENTES_SEARCH_URL}?q=${encodeURIComponent(q)}`)
-            .then(r => r.json())
-            .then(data => {
-                const box = document.getElementById('cliente-results');
-                if (!data.length) {
-                    box.classList.add('hidden');
-                    return;
-                }
-                box.innerHTML = data.map(c => `
+                .then(r => r.json())
+                .then(data => {
+                    const box = document.getElementById('cliente-results');
+                    if (!data.length) {
+                        box.classList.add('hidden');
+                        return;
+                    }
+                    box.innerHTML = data.map(c => `
                     <div class="px-4 py-2.5 hover:bg-blue-50 cursor-pointer text-sm text-slate-700 border-b border-slate-100 last:border-0"
                         onclick="selCliente(${c.id}, '${c.nombre} ${c.apellido}')">
                         ${c.nombre} ${c.apellido} <span class="text-slate-400 text-xs">(${c.email})</span>
                     </div>
                 `).join('');
-                box.classList.remove('hidden');
-            })
-            .catch(() => {
-                document.getElementById('cliente-results').classList.add('hidden');
-            });
+                    box.classList.remove('hidden');
+                })
+                .catch(() => {
+                    document.getElementById('cliente-results').classList.add('hidden');
+                });
         }, 300);
     }
 
@@ -677,7 +681,7 @@
         const id = parseInt(sel.value);
         const qty = parseInt(document.getElementById('inp-qty').value);
         const opt = sel.options[sel.selectedIndex];
-        
+
         if (!id || !qty || qty < 1) {
             showToast('Selecciona un producto y una cantidad válida.', 'error');
             return;
@@ -755,71 +759,71 @@
         fd.append('_token', '{{ csrf_token() }}');
 
         fetch(STORE_URL, {
-            method: 'POST',
-            body: fd,
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            }
-        })
-        .then(async r => {
-            if (!r.ok) {
-                const txt = await r.text();
-                throw new Error(txt);
-            }
-            return r.json();
-        })
-        .then(d => {
-            if (d.ok) {
-                closeModal();
-                Swal.fire({
-                    icon: 'success',
-                    title: '¡Venta Registrada!',
-                    text: d.msg,
-                    confirmButtonColor: '#2563eb',
-                    confirmButtonText: 'Excelente'
-                }).then(() => {
-                    location.reload();
-                });
-            } else {
+                method: 'POST',
+                body: fd,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(async r => {
+                if (!r.ok) {
+                    const txt = await r.text();
+                    throw new Error(txt);
+                }
+                return r.json();
+            })
+            .then(d => {
+                if (d.ok) {
+                    closeModal();
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Venta Registrada!',
+                        text: d.msg,
+                        confirmButtonColor: '#2563eb',
+                        confirmButtonText: 'Excelente'
+                    }).then(() => {
+                        location.reload();
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Atención',
+                        text: d.msg,
+                        confirmButtonColor: '#2563eb'
+                    });
+                }
+            })
+            .catch(err => {
+                console.error(err);
                 Swal.fire({
                     icon: 'error',
-                    title: 'Atención',
-                    text: d.msg,
-                    confirmButtonColor: '#2563eb'
+                    title: 'Error del Servidor',
+                    text: err.message.substring(0, 200) || 'Ocurrió un error inesperado al procesar la venta.'
                 });
-            }
-        })
-        .catch(err => {
-            console.error(err);
-            Swal.fire({
-                icon: 'error',
-                title: 'Error del Servidor',
-                text: err.message.substring(0, 200) || 'Ocurrió un error inesperado al procesar la venta.'
             });
-        });
     }
     @endif
 
     // ── Ver Detalles de Venta (Fetch AJAX) ─────────────────────────────────────────────
     function verDetalle(id) {
         fetch(`${BASE_URL}/${id}`, {
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            }
-        })
-        .then(r => r.json())
-        .then(detalles => {
-            const body = document.getElementById('det-body');
-            
-            // Obtener datos del row para la cabecera del modal
-            const row = document.getElementById(`vrow-${id}`);
-            const fecha = row.cells[1].textContent;
-            const cliente = row.cells[2].textContent;
-            const empleado = row.cells[3].textContent;
-            const metodo = row.cells[4].textContent.trim();
-            const total = row.cells[5].textContent;
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(r => r.json())
+            .then(detalles => {
+                const body = document.getElementById('det-body');
 
-            body.innerHTML = `
+                // Obtener datos del row para la cabecera del modal
+                const row = document.getElementById(`vrow-${id}`);
+                const fecha = row.cells[1].textContent;
+                const cliente = row.cells[2].textContent;
+                const empleado = row.cells[3].textContent;
+                const metodo = row.cells[4].textContent.trim();
+                const total = row.cells[5].textContent;
+
+                body.innerHTML = `
                 <div class="grid grid-cols-2 gap-3 mb-5 text-sm p-4 bg-slate-50 rounded-2xl">
                     <div><p class="text-xs text-slate-400 font-bold uppercase mb-0.5">Fecha</p><p class="font-semibold text-slate-800">${fecha}</p></div>
                     <div><p class="text-xs text-slate-400 font-bold uppercase mb-0.5">Cliente</p><p class="font-semibold text-slate-800">${cliente}</p></div>
@@ -851,11 +855,11 @@
                     <span class="text-xl font-bold text-blue-600">${total}</span>
                 </div>
             `;
-            document.getElementById('modal-det').classList.remove('hidden');
-        })
-        .catch(err => {
-            showToast('Error al obtener los detalles de la venta.', 'error');
-        });
+                document.getElementById('modal-det').classList.remove('hidden');
+            })
+            .catch(err => {
+                showToast('Error al obtener los detalles de la venta.', 'error');
+            });
     }
 
     // Alertas Toast rápidas mediante SweetAlert2

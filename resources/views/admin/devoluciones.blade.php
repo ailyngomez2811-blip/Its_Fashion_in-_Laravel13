@@ -57,6 +57,7 @@
             opacity: 0;
             transform: scale(.97)
         }
+
         to {
             opacity: 1;
             transform: scale(1)
@@ -115,7 +116,7 @@
                 <h3 class="font-bold text-slate-800">Historial de solicitudes</h3>
                 <p class="text-xs text-slate-500 mt-0.5"><span id="cant-devoluciones">{{ count($devoluciones) }}</span> solicitud(es) registrada(s)</p>
             </div>
-            
+
             <!-- Botones de filtrado rápido -->
             <div class="flex flex-wrap gap-2">
                 <button onclick="filtrar('todos')" id="btn-todos" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 text-white transition shadow-sm">Todos</button>
@@ -130,62 +131,62 @@
                 <thead>
                     <tr>
                         @foreach (['#', 'Fecha', 'Venta Original', 'Cliente', 'Motivo', 'Total Devolución', 'Estado', 'Acciones'] as $h)
-                            <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide bg-slate-50 border-b border-slate-100">{{ $h }}</th>
+                        <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide bg-slate-50 border-b border-slate-100">{{ $h }}</th>
                         @endforeach
                     </tr>
                 </thead>
                 <tbody id="tabla-body">
                     @forelse ($devoluciones as $d)
-                        @php
-                            $estadoClasses = [
-                                'Pendiente' => 'bg-amber-100 text-amber-700',
-                                'Aceptada'  => 'bg-emerald-100 text-emerald-700',
-                                'Rechazada' => 'bg-red-100 text-red-700',
-                            ];
-                            $cls = $estadoClasses[$d->estado] ?? 'bg-slate-100 text-slate-600';
-                        @endphp
-                        <tr class="trow text-slate-700" data-estado="{{ $d->estado }}">
-                            <td class="px-6 py-4 border-b border-slate-50 text-sm font-mono text-slate-500">#{{ $d->id }}</td>
-                            <td class="px-6 py-4 border-b border-slate-50 text-sm text-slate-700">{{ $d->fecha ? $d->fecha->format('d/m/Y H:i') : '—' }}</td>
-                            <td class="px-6 py-4 border-b border-slate-50 text-sm font-mono text-blue-600 font-semibold">#{{ $d->venta_id }}</td>
-                            <td class="px-6 py-4 border-b border-slate-50 text-sm text-slate-700">
-                                {{ $d->venta->cliente->nombre ?? 'Mostrador' }} {{ $d->venta->cliente->apellido ?? '' }}
-                            </td>
-                            <td class="px-6 py-4 border-b border-slate-50 text-sm text-slate-500 max-w-xs truncate" title="{{ $d->motivo }}">
-                                {{ $d->motivo }}
-                            </td>
-                            <td class="px-6 py-4 border-b border-slate-50 text-sm font-bold text-red-600">${{ number_format($d->total_devolucion, 2) }}</td>
-                            <td class="px-6 py-4 border-b border-slate-50">
-                                <span class="badge {{ $cls }}">
-                                    {{ $d->estado }}
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 border-b border-slate-50">
-                                <div class="flex items-center gap-1.5">
-                                    <button onclick="verDetalle({{ $d->id }})" title="Ver detalle"
-                                        class="w-8 h-8 rounded-lg bg-slate-50 hover:bg-blue-100 text-slate-500 hover:text-blue-600 flex items-center justify-center transition">
-                                        <i class="fas fa-eye text-xs"></i>
-                                    </button>
-                                    @if ($d->estado === 'Pendiente' && Auth::user()->rol_id === 1)
-                                        <button onclick="resolver({{ $d->id }}, 'aprobar')" title="Aprobar Devolución"
-                                            class="w-8 h-8 rounded-lg bg-emerald-50 hover:bg-emerald-200 text-emerald-600 flex items-center justify-center transition">
-                                            <i class="fas fa-check text-xs"></i>
-                                        </button>
-                                        <button onclick="resolver({{ $d->id }}, 'rechazar')" title="Rechazar Devolución"
-                                            class="w-8 h-8 rounded-lg bg-red-50 hover:bg-red-200 text-red-500 flex items-center justify-center transition">
-                                            <i class="fas fa-times text-xs"></i>
-                                        </button>
-                                    @endif
-                                </div>
-                            </td>
-                        </tr>
+                    @php
+                    $estadoClasses = [
+                    'Pendiente' => 'bg-amber-100 text-amber-700',
+                    'Aceptada' => 'bg-emerald-100 text-emerald-700',
+                    'Rechazada' => 'bg-red-100 text-red-700',
+                    ];
+                    $cls = $estadoClasses[$d->estado] ?? 'bg-slate-100 text-slate-600';
+                    @endphp
+                    <tr class="trow text-slate-700" data-estado="{{ $d->estado }}">
+                        <td class="px-6 py-4 border-b border-slate-50 text-sm font-mono text-slate-500">#{{ $d->id }}</td>
+                        <td class="px-6 py-4 border-b border-slate-50 text-sm text-slate-700">{{ $d->fecha ? $d->fecha->format('d/m/Y H:i') : '—' }}</td>
+                        <td class="px-6 py-4 border-b border-slate-50 text-sm font-mono text-blue-600 font-semibold">#{{ $d->venta_id }}</td>
+                        <td class="px-6 py-4 border-b border-slate-50 text-sm text-slate-700">
+                            {{ $d->venta->cliente->nombre ?? 'Mostrador' }} {{ $d->venta->cliente->apellido ?? '' }}
+                        </td>
+                        <td class="px-6 py-4 border-b border-slate-50 text-sm text-slate-500 max-w-xs truncate" title="{{ $d->motivo }}">
+                            {{ $d->motivo }}
+                        </td>
+                        <td class="px-6 py-4 border-b border-slate-50 text-sm font-bold text-red-600">${{ number_format($d->total_devolucion, 2) }}</td>
+                        <td class="px-6 py-4 border-b border-slate-50">
+                            <span class="badge {{ $cls }}">
+                                {{ $d->estado }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 border-b border-slate-50">
+                            <div class="flex items-center gap-1.5">
+                                <button onclick="verDetalle({{ $d->id }})" title="Ver detalle"
+                                    class="w-8 h-8 rounded-lg bg-slate-50 hover:bg-blue-100 text-slate-500 hover:text-blue-600 flex items-center justify-center transition">
+                                    <i class="fas fa-eye text-xs"></i>
+                                </button>
+                                @if ($d->estado === 'Pendiente' && Auth::user()->rol_id === 1)
+                                <button onclick="resolver({{ $d->id }}, 'aprobar')" title="Aprobar Devolución"
+                                    class="w-8 h-8 rounded-lg bg-emerald-50 hover:bg-emerald-200 text-emerald-600 flex items-center justify-center transition">
+                                    <i class="fas fa-check text-xs"></i>
+                                </button>
+                                <button onclick="resolver({{ $d->id }}, 'rechazar')" title="Rechazar Devolución"
+                                    class="w-8 h-8 rounded-lg bg-red-50 hover:bg-red-200 text-red-500 flex items-center justify-center transition">
+                                    <i class="fas fa-times text-xs"></i>
+                                </button>
+                                @endif
+                            </div>
+                        </td>
+                    </tr>
                     @empty
-                        <tr id="row-empty">
-                            <td colspan="8" class="px-6 py-16 text-center text-slate-400">
-                                <i class="fas fa-undo-alt text-4xl mb-3 block opacity-20"></i>
-                                <p class="text-sm">No hay solicitudes de devolución registradas</p>
-                            </td>
-                        </tr>
+                    <tr id="row-empty">
+                        <td colspan="8" class="px-6 py-16 text-center text-slate-400">
+                            <i class="fas fa-undo-alt text-4xl mb-3 block opacity-20"></i>
+                            <p class="text-sm">No hay solicitudes de devolución registradas</p>
+                        </td>
+                    </tr>
                     @endforelse
                 </tbody>
             </table>
@@ -231,14 +232,14 @@
                 if (est === 'Pendiente') hoverCls = "hover:bg-amber-100 hover:text-amber-700";
                 if (est === 'Aceptada') hoverCls = "hover:bg-emerald-100 hover:text-emerald-700";
                 if (est === 'Rechazada') hoverCls = "hover:bg-red-100 hover:text-red-700";
-                
+
                 btn.className = `px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-100 text-slate-600 ${hoverCls} transition`;
             }
         });
 
         let filtrados = 0;
         let total = 0;
-        
+
         document.querySelectorAll('#tabla-body tr[data-estado]').forEach(row => {
             total++;
             const show = (estado === 'todos' || row.dataset.estado === estado);
@@ -247,7 +248,7 @@
         });
 
         document.getElementById('cant-devoluciones').textContent = filtrados;
-        
+
         const rowEmpty = document.getElementById('row-empty');
         if (!rowEmpty) {
             document.getElementById('empty-state').classList.toggle('hidden', filtrados > 0);
@@ -267,7 +268,7 @@
         const label = accion === 'aprobar' ? 'APROBAR' : 'RECHAZAR';
         const icon = accion === 'aprobar' ? 'question' : 'warning';
         const color = accion === 'aprobar' ? '#10b981' : '#ef4444';
-        
+
         Swal.fire({
             title: `¿Estás seguro?`,
             text: `Vas a ${label} esta solicitud de devolución. Esta acción no se puede deshacer.`,
@@ -281,48 +282,48 @@
             if (result.isConfirmed) {
                 const fd = new FormData();
                 fd.append('_token', '{{ csrf_token() }}');
-                
+
                 fetch(`${BASE_URL}/${id}/${accion}`, {
-                    method: 'POST',
-                    body: fd,
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                })
-                .then(async r => {
-                    if (!r.ok) {
-                        const txt = await r.text();
-                        throw new Error(txt);
-                    }
-                    return r.json();
-                })
-                .then(d => {
-                    if (d.ok) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: '¡Resuelto!',
-                            text: d.msg,
-                            confirmButtonColor: '#2563eb'
-                        }).then(() => {
-                            location.reload();
-                        });
-                    } else {
+                        method: 'POST',
+                        body: fd,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then(async r => {
+                        if (!r.ok) {
+                            const txt = await r.text();
+                            throw new Error(txt);
+                        }
+                        return r.json();
+                    })
+                    .then(d => {
+                        if (d.ok) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: '¡Resuelto!',
+                                text: d.msg,
+                                confirmButtonColor: '#2563eb'
+                            }).then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: d.msg,
+                                confirmButtonColor: '#2563eb'
+                            });
+                        }
+                    })
+                    .catch(err => {
+                        console.error(err);
                         Swal.fire({
                             icon: 'error',
-                            title: 'Error',
-                            text: d.msg,
-                            confirmButtonColor: '#2563eb'
+                            title: 'Error del Servidor',
+                            text: err.message.substring(0, 200) || 'Ocurrió un error inesperado al procesar la resolución.'
                         });
-                    }
-                })
-                .catch(err => {
-                    console.error(err);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error del Servidor',
-                        text: err.message.substring(0, 200) || 'Ocurrió un error inesperado al procesar la resolución.'
                     });
-                });
             }
         });
     }
@@ -330,15 +331,15 @@
     // ── Ver Detalle de la Solicitud (Fetch AJAX) ──────────────────────────────────
     function verDetalle(id) {
         fetch(`${BASE_URL}/${id}`, {
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            }
-        })
-        .then(r => r.json())
-        .then(data => {
-            const body = document.getElementById('det-body');
-            
-            body.innerHTML = `
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(r => r.json())
+            .then(data => {
+                const body = document.getElementById('det-body');
+
+                body.innerHTML = `
                 <div class="mb-5 p-4 bg-slate-50 rounded-2xl text-sm space-y-2.5 text-slate-700">
                     <p><strong class="text-slate-500 font-bold uppercase text-xs block mb-0.5">Asociada a Venta</strong> <span class="font-mono text-blue-600 font-semibold">#${data.venta_id}</span></p>
                     <p><strong class="text-slate-500 font-bold uppercase text-xs block mb-0.5">Motivo del reclamo</strong> <span class="italic text-slate-800">"${data.motivo}"</span></p>
@@ -369,15 +370,15 @@
                     <span class="text-xl font-bold text-red-600">$${parseFloat(data.total_devolucion).toFixed(2)}</span>
                 </div>
             `;
-            document.getElementById('modal-det').classList.remove('hidden');
-        })
-        .catch(err => {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Error al obtener los detalles de la solicitud.'
+                document.getElementById('modal-det').classList.remove('hidden');
+            })
+            .catch(err => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Error al obtener los detalles de la solicitud.'
+                });
             });
-        });
     }
 
     function showToast(msg, type = 'success') {

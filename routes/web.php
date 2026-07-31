@@ -50,11 +50,11 @@ Route::get('/dashboard', function () {
             'productosCriticos'      => Producto::where('estado', 'Activo')->whereColumn('stock', '<=', 'stock_minimo')->count(),
         ]),
         3 => view('cliente.dashboard', [
-            'misVentas'          => Venta::where('user_id', $user->id)->where('estado', 'Completada')->latest('fecha')->take(5)->get(),
-            'totalCompras'       => Venta::where('user_id', $user->id)->where('estado', 'Completada')->count(),
-            'totalGastado'       => Venta::where('user_id', $user->id)->where('estado', 'Completada')->sum('total'),
-            'misDevoluciones'    => Devolucion::whereHas('venta', fn($q) => $q->where('user_id', $user->id))->latest('fecha')->take(5)->get(),
-            'totalDevoluciones'  => Devolucion::whereHas('venta', fn($q) => $q->where('user_id', $user->id))->count(),
+            'misVentas'          => Venta::where('cliente_id', $user->id)->where('estado', 'Completada')->latest('fecha')->take(5)->get(),
+            'totalCompras'       => Venta::where('cliente_id', $user->id)->where('estado', 'Completada')->count(),
+            'totalGastado'       => Venta::where('cliente_id', $user->id)->where('estado', 'Completada')->sum('total'),
+            'misDevoluciones'    => Devolucion::whereHas('venta', fn($q) => $q->where('cliente_id', $user->id))->latest('fecha')->take(5)->get(),
+            'totalDevoluciones'  => Devolucion::whereHas('venta', fn($q) => $q->where('cliente_id', $user->id))->count(),
         ]),
         default => abort(403),
     };

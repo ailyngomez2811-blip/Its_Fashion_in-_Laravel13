@@ -7,7 +7,7 @@
 
     <!-- Banner de bienvenida -->
     <div class="rounded-[2rem] p-6 mb-7 text-white flex items-center justify-between"
-         style="background: linear-gradient(135deg, #7c3aed 0%, #2563eb 100%); box-shadow: 0 8px 24px rgba(124,58,237,.35);">
+         style="background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%); box-shadow: 0 8px 24px rgba(37,99,235,.2);">
         <div>
             <p class="text-purple-200 text-sm mb-0.5">Bienvenida de vuelta</p>
             <h2 class="text-2xl font-bold font-serif">{{ auth()->user()->nombre }} {{ auth()->user()->apellido }}</h2>

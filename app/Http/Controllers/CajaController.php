@@ -32,6 +32,12 @@ class CajaController extends Controller
             $saldo_teorico = $caja->saldo_inicial + ($caja->total_ingresos ?? 0) - ($caja->total_egresos ?? 0);
         }
 
+        /** @var User $user */
+        $user = Auth::user();
+        if ($user->rol_id === 2) {
+            return view('empleado.caja', compact('caja', 'movimientos', 'saldo_teorico'));
+        }
+
         return view('admin.caja', compact('caja', 'movimientos', 'saldo_teorico'));
     }
 

@@ -35,6 +35,12 @@ class CompraController extends Controller
             'hoy' => Compra::whereDate('fecha', today())->count(),
         ];
 
+        /** @var User $user */
+        $user = Auth::user();
+        if ($user->rol_id === 2) {
+            return view('empleado.compras', compact('compras', 'proveedores', 'productos', 'kpi'));
+        }
+
         return view('admin.compras', compact('compras', 'proveedores', 'productos', 'kpi'));
     }
 

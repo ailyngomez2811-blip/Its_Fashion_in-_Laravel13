@@ -364,12 +364,10 @@
                 </div>
                 <div>
                     <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Talla *</label>
-                    <select name="talla" id="prod-talla" required class="w-full px-4 py-2.5 bg-slate-50 border-2 border-slate-200 rounded-xl text-sm text-slate-700 focus:outline-none transition">
-                        <option value="">Seleccionar...</option>
-                        @foreach (['XS', 'S', 'M', 'L', 'XL', 'XXL', 'Única'] as $t)
-                            <option value="{{ $t }}">{{ $t }}</option>
-                        @endforeach
-                    </select>
+                    <input type="text" name="talla" id="prod-talla" required
+                        placeholder="Ej: S, M, L, XL, 38, 4T, 2 años, 30x32…"
+                        class="w-full px-4 py-2.5 bg-slate-50 border-2 border-slate-200 rounded-xl text-sm text-slate-700 focus:outline-none transition">
+                    <p class="text-[10px] text-slate-400 mt-1">Escribe la talla exacta — adultos, niños, numérica o como sea.</p>
                 </div>
                 <div>
                     <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Color *</label>

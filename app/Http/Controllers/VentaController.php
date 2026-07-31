@@ -21,6 +21,16 @@ class VentaController extends Controller
      */
     public function index(): View
     {
+        /** @var User $user */
+        $user = Auth::user();
+
+        // Si es cliente, redirigir a su vista específica mis_compras
+        if ($user->rol_id === 3) {
+            $misVentas = Venta::where('cliente_id', $user->id)->orderBy('fecha', 'desc')->get();
+            $totalGastado = Venta::where('cliente_id', $user->id)->where('estado', 'Completada')->sum('total');
+            return view('cliente.mis_compras', compact('misVentas', 'totalGastado'));
+        }
+
         // Obtener las ventas con relaciones cargadas
         $ventas = Venta::with(['cliente', 'usuario'])->orderBy('fecha', 'desc')->get();
 
@@ -42,6 +52,10 @@ class VentaController extends Controller
             'completadas' => Venta::where('estado', 'Completada')->count(),
             'hoy' => Venta::whereDate('fecha', today())->count(),
         ];
+
+        if ($user->rol_id === 2) {
+            return view('empleado.ventas', compact('ventas', 'clientes', 'productos', 'cajaAbierta', 'kpi'));
+        }
 
         return view('admin.ventas', compact('ventas', 'clientes', 'productos', 'cajaAbierta', 'kpi'));
     }

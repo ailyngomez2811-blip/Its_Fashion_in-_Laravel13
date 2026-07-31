@@ -426,12 +426,15 @@
     }
 
     function showToast(msg, type = 'success') {
-        const toast = document.getElementById('toast');
-        document.getElementById('toast-text').textContent = msg;
-        toast.style.borderLeftColor = type === 'success' ? '#3b82f6' : '#ef4444';
-        document.getElementById('toast-icon').className = `fas ${type === 'success' ? 'fa-check-circle text-blue-500' : 'fa-exclamation-circle text-red-500'} mt-0.5 flex-shrink-0`;
-        toast.classList.remove('hidden');
-        setTimeout(() => toast.classList.add('hidden'), 3500);
+        Swal.fire({
+            icon: type,
+            title: msg,
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3500,
+            timerProgressBar: true
+        });
     }
 
     document.getElementById('modal').addEventListener('click', function(e) {
