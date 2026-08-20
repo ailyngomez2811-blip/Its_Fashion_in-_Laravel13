@@ -1,332 +1,373 @@
-<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
-<head>
-    <meta charset="utf-8">
-    <style>
-        body {
-            background-color: #ffffff;
-            margin: 0;
-            padding: 0;
-        }
+<?php
+// Evitar que Blade intente compilar etiquetas con prefijo x: u o:
+echo '<?xml version="1.0" encoding="utf-8"?>' . "\n";
+echo '<?mso-application progid="Excel.Sheet"?>' . "\n";
+?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+    xmlns:o="urn:schemas-microsoft-com:office:office"
+    xmlns:x="urn:schemas-microsoft-com:office:excel"
+    xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+    xmlns:html="http://www.w3.org/TR/REC-html40">
+    <DocumentProperties xmlns="urn:schemas-microsoft-com:office:office">
+        <Author><?php echo htmlspecialchars((Auth::user()?->nombre ?? 'Admin') . ' ' . (Auth::user()?->apellido ?? 'General')); ?></Author>
+        <Created><?php echo now()->toIso8601String(); ?></Created>
+        <Version>16.00</Version>
+    </DocumentProperties>
+    <OfficeDocumentSettings xmlns="urn:schemas-microsoft-com:office:office">
+        <AllowPNG />
+    </OfficeDocumentSettings>
+    <ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel">
+        <WindowHeight>10000</WindowHeight>
+        <WindowWidth>20000</WindowWidth>
+        <WindowTopX>0</WindowTopX>
+        <WindowTopY>0</WindowTopY>
+        <ProtectStructure>False</ProtectStructure>
+        <ProtectWindows>False</ProtectWindows>
+    </ExcelWorkbook>
+    <Styles>
+        <Style ss:ID="Default" ss:Name="Normal">
+            <Alignment ss:Vertical="Bottom" /><Borders/><Font ss:FontName="Calibri" x:Family="Swiss" ss:Size="11" ss:Color="#000000" /><Interior/><NumberFormat/><Protection/>
+        </Style>
+        <!-- Titulos -->
+        <Style ss:ID="sTitle">
+            <Alignment ss:Vertical="Bottom" /><Font ss:FontName="Calibri" ss:Size="22" ss:Bold="1" ss:Color="#2563eb" />
+        </Style>
+        <Style ss:ID="sSubtitle">
+            <Alignment ss:Vertical="Center" /><Font ss:FontName="Calibri" ss:Size="14" ss:Bold="1" ss:Color="#1e293b" />
+        </Style>
+        <Style ss:ID="sMeta">
+            <Alignment ss:Vertical="Top" /><Font ss:FontName="Calibri" ss:Size="11" ss:Color="#475569" />
+        </Style>
+        <Style ss:ID="sMetaRight">
+            <Alignment ss:Horizontal="Right" ss:Vertical="Center" /><Font ss:FontName="Calibri" ss:Size="11" ss:Bold="1" ss:Color="#475569" />
+        </Style>
+        <Style ss:ID="sSectionHeader">
+            <Alignment ss:Vertical="Bottom" /><Font ss:FontName="Calibri" ss:Size="13" ss:Bold="1" ss:Color="#2563eb" /><Borders><Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="2" ss:Color="#475569" /></Borders>
+        </Style>
+        <!-- KPI Styles -->
+        <Style ss:ID="sKpiValue">
+            <Alignment ss:Horizontal="Center" ss:Vertical="Center" /><Borders><Border ss:Position="All" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#475569" /></Borders><Font ss:FontName="Calibri" ss:Size="14" ss:Bold="1" ss:Color="#1e3a8a" /><Interior ss:Color="#f8fafc" ss:Pattern="Solid" />
+        </Style>
+        <Style ss:ID="sKpiTitle">
+            <Alignment ss:Horizontal="Center" ss:Vertical="Center" /><Borders><Border ss:Position="All" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#475569" /></Borders><Font ss:FontName="Calibri" ss:Size="11" ss:Bold="1" ss:Color="#475569" /><Interior ss:Color="#f8fafc" ss:Pattern="Solid" />
+        </Style>
+        <!-- Table Header -->
+        <Style ss:ID="sTableHeader">
+            <Alignment ss:Vertical="Center" /><Borders><Border ss:Position="All" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#475569" /></Borders><Font ss:FontName="Calibri" ss:Size="11" ss:Bold="1" ss:Color="#000000" /><Interior ss:Color="#f1f5f9" ss:Pattern="Solid" />
+        </Style>
+        <Style ss:ID="sTableHeaderRight">
+            <Alignment ss:Horizontal="Right" ss:Vertical="Center" /><Borders><Border ss:Position="All" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#475569" /></Borders><Font ss:FontName="Calibri" ss:Size="11" ss:Bold="1" ss:Color="#000000" /><Interior ss:Color="#f1f5f9" ss:Pattern="Solid" />
+        </Style>
+        <Style ss:ID="sTableHeaderCenter">
+            <Alignment ss:Horizontal="Center" ss:Vertical="Center" /><Borders><Border ss:Position="All" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#475569" /></Borders><Font ss:FontName="Calibri" ss:Size="11" ss:Bold="1" ss:Color="#000000" /><Interior ss:Color="#f1f5f9" ss:Pattern="Solid" />
+        </Style>
+        <!-- Data Rows -->
+        <Style ss:ID="sDataLeft">
+            <Alignment ss:Vertical="Center" /><Borders><Border ss:Position="All" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#475569" /></Borders><Font ss:FontName="Calibri" ss:Size="11" />
+        </Style>
+        <Style ss:ID="sDataLeftAlt">
+            <Alignment ss:Vertical="Center" /><Borders><Border ss:Position="All" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#475569" /></Borders><Font ss:FontName="Calibri" ss:Size="11" /><Interior ss:Color="#f8fafc" ss:Pattern="Solid" />
+        </Style>
+        <Style ss:ID="sDataLeftBold">
+            <Alignment ss:Vertical="Center" /><Borders><Border ss:Position="All" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#475569" /></Borders><Font ss:FontName="Calibri" ss:Size="11" ss:Bold="1" />
+        </Style>
+        <Style ss:ID="sDataLeftBoldAlt">
+            <Alignment ss:Vertical="Center" /><Borders><Border ss:Position="All" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#475569" /></Borders><Font ss:FontName="Calibri" ss:Size="11" ss:Bold="1" /><Interior ss:Color="#f8fafc" ss:Pattern="Solid" />
+        </Style>
+        <Style ss:ID="sDataRight">
+            <Alignment ss:Horizontal="Right" ss:Vertical="Center" /><Borders><Border ss:Position="All" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#475569" /></Borders><Font ss:FontName="Calibri" ss:Size="11" />
+        </Style>
+        <Style ss:ID="sDataRightAlt">
+            <Alignment ss:Horizontal="Right" ss:Vertical="Center" /><Borders><Border ss:Position="All" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#475569" /></Borders><Font ss:FontName="Calibri" ss:Size="11" /><Interior ss:Color="#f8fafc" ss:Pattern="Solid" />
+        </Style>
+        <Style ss:ID="sDataRightBold">
+            <Alignment ss:Horizontal="Right" ss:Vertical="Center" /><Borders><Border ss:Position="All" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#475569" /></Borders><Font ss:FontName="Calibri" ss:Size="11" ss:Bold="1" />
+        </Style>
+        <Style ss:ID="sDataRightBoldAlt">
+            <Alignment ss:Horizontal="Right" ss:Vertical="Center" /><Borders><Border ss:Position="All" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#475569" /></Borders><Font ss:FontName="Calibri" ss:Size="11" ss:Bold="1" /><Interior ss:Color="#f8fafc" ss:Pattern="Solid" />
+        </Style>
+        <Style ss:ID="sDataCenter">
+            <Alignment ss:Horizontal="Center" ss:Vertical="Center" /><Borders><Border ss:Position="All" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#475569" /></Borders><Font ss:FontName="Calibri" ss:Size="11" />
+        </Style>
+        <Style ss:ID="sDataCenterAlt">
+            <Alignment ss:Horizontal="Center" ss:Vertical="Center" /><Borders><Border ss:Position="All" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#475569" /></Borders><Font ss:FontName="Calibri" ss:Size="11" /><Interior ss:Color="#f8fafc" ss:Pattern="Solid" />
+        </Style>
+        <!-- Statuses -->
+        <Style ss:ID="sStatusGreen">
+            <Alignment ss:Horizontal="Center" ss:Vertical="Center" /><Borders><Border ss:Position="All" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#475569" /></Borders><Font ss:FontName="Calibri" ss:Size="11" ss:Bold="1" ss:Color="#16a34a" />
+        </Style>
+        <Style ss:ID="sStatusGreenAlt">
+            <Alignment ss:Horizontal="Center" ss:Vertical="Center" /><Borders><Border ss:Position="All" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#475569" /></Borders><Font ss:FontName="Calibri" ss:Size="11" ss:Bold="1" ss:Color="#16a34a" /><Interior ss:Color="#f8fafc" ss:Pattern="Solid" />
+        </Style>
+        <Style ss:ID="sStatusRed">
+            <Alignment ss:Horizontal="Center" ss:Vertical="Center" /><Borders><Border ss:Position="All" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#475569" /></Borders><Font ss:FontName="Calibri" ss:Size="11" ss:Bold="1" ss:Color="#b91c1c" />
+        </Style>
+        <Style ss:ID="sStatusRedAlt">
+            <Alignment ss:Horizontal="Center" ss:Vertical="Center" /><Borders><Border ss:Position="All" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#475569" /></Borders><Font ss:FontName="Calibri" ss:Size="11" ss:Bold="1" ss:Color="#b91c1c" /><Interior ss:Color="#f8fafc" ss:Pattern="Solid" />
+        </Style>
+        <!-- Totals -->
+        <Style ss:ID="sTotalLabel">
+            <Alignment ss:Horizontal="Right" ss:Vertical="Center" /><Borders><Border ss:Position="All" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#475569" /></Borders><Font ss:FontName="Calibri" ss:Size="11" ss:Bold="1" ss:Color="#000000" /><Interior ss:Color="#f8fafc" ss:Pattern="Solid" />
+        </Style>
+        <Style ss:ID="sTotalValue">
+            <Alignment ss:Horizontal="Right" ss:Vertical="Center" /><Borders><Border ss:Position="All" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#475569" /></Borders><Font ss:FontName="Calibri" ss:Size="11" ss:Bold="1" ss:Color="#2563eb" /><Interior ss:Color="#f8fafc" ss:Pattern="Solid" />
+        </Style>
+    </Styles>
 
-        table {
-            border-collapse: collapse;
-            font-family: Calibri, 'Segoe UI', Arial, sans-serif;
-            font-size: 11px;
-        }
+    <?php if ($incluirVentas): ?>
+        <Worksheet ss:Name="Ventas e Ingresos">
+            <Table ss:ExpandedColumnCount="6" x:FullColumns="1" x:FullRows="1" ss:DefaultRowHeight="22">
+                <Column ss:Width="110" />
+                <Column ss:Width="160" />
+                <Column ss:Width="200" />
+                <Column ss:Width="160" />
+                <Column ss:Width="120" />
+                <Column ss:Width="140" />
 
-        /* Cabecera Principal */
-        .brand-title {
-            font-size: 18px;
-            font-weight: bold;
-            color: #0f172a;
-            height: 35px;
-            vertical-align: bottom;
-        }
+                <Row ss:Height="40">
+                    <Cell ss:MergeAcross="3" ss:StyleID="sTitle"><Data ss:Type="String">Its Fashion</Data></Cell>
+                    <Cell ss:MergeAcross="1" ss:StyleID="sMetaRight"><Data ss:Type="String">Generado por: <?php echo htmlspecialchars((Auth::user()?->nombre ?? 'Admin') . ' ' . (Auth::user()?->apellido ?? 'General')); ?></Data></Cell>
+                </Row>
+                <Row ss:Height="25">
+                    <Cell ss:MergeAcross="3" ss:StyleID="sSubtitle"><Data ss:Type="String">Consolidado de Actividad Comercial - Ventas</Data></Cell>
+                    <Cell ss:MergeAcross="1" ss:StyleID="sMetaRight"><Data ss:Type="String">Fecha: <?php echo now()->format('d/m/Y H:i'); ?></Data></Cell>
+                </Row>
+                <Row ss:Height="20">
+                    <Cell ss:MergeAcross="5" ss:StyleID="sMeta"><Data ss:Type="String">Rango de evaluación: <?php echo date('d/m/Y', strtotime($desde)); ?> al <?php echo date('d/m/Y', strtotime($hasta)); ?></Data></Cell>
+                </Row>
+                <Row ss:Height="15" />
+                <Row ss:Height="30">
+                    <Cell ss:MergeAcross="5" ss:StyleID="sSectionHeader"><Data ss:Type="String">Resumen e Ingresos del Periodo</Data></Cell>
+                </Row>
+                <Row ss:Height="10" />
 
-        .brand-title span {
-            color: #2563eb;
-        }
+                <!-- KPIs -->
+                <Row ss:Height="22">
+                    <Cell ss:StyleID="sKpiTitle"><Data ss:Type="String">Total Ingresos</Data></Cell>
+                    <Cell ss:StyleID="sKpiTitle"><Data ss:Type="String">Ventas</Data></Cell>
+                    <Cell ss:MergeAcross="1" ss:StyleID="sKpiTitle"><Data ss:Type="String">Ticket Promedio</Data></Cell>
+                    <Cell ss:MergeAcross="1" ss:StyleID="sKpiTitle"><Data ss:Type="String">Efectivo</Data></Cell>
+                </Row>
+                <Row ss:Height="28">
+                    <Cell ss:StyleID="sKpiValue"><Data ss:Type="String">$<?php echo number_format($kpi->total_periodo ?? 0, 2); ?></Data></Cell>
+                    <Cell ss:StyleID="sKpiValue"><Data ss:Type="String"><?php echo $kpi->transacciones ?? 0; ?></Data></Cell>
+                    <Cell ss:MergeAcross="1" ss:StyleID="sKpiValue"><Data ss:Type="String">$<?php echo number_format($kpi->ticket_promedio ?? 0, 2); ?></Data></Cell>
+                    <Cell ss:MergeAcross="1" ss:StyleID="sKpiValue"><Data ss:Type="String">$<?php echo number_format($kpi->efectivo ?? 0, 2); ?></Data></Cell>
+                </Row>
+                <Row ss:Height="15" />
 
-        .main-subtitle {
-            font-size: 14px;
-            font-weight: bold;
-            color: #1e293b;
-            height: 30px;
-            vertical-align: middle;
-        }
+                <!-- Headers -->
+                <Row ss:Height="26">
+                    <Cell ss:StyleID="sTableHeader"><Data ss:Type="String">ID Venta</Data></Cell>
+                    <Cell ss:StyleID="sTableHeader"><Data ss:Type="String">Fecha</Data></Cell>
+                    <Cell ss:StyleID="sTableHeader"><Data ss:Type="String">Cliente</Data></Cell>
+                    <Cell ss:StyleID="sTableHeader"><Data ss:Type="String">Método Pago</Data></Cell>
+                    <Cell ss:StyleID="sTableHeaderCenter"><Data ss:Type="String">Estado</Data></Cell>
+                    <Cell ss:StyleID="sTableHeaderRight"><Data ss:Type="String">Total</Data></Cell>
+                </Row>
 
-        .info-text {
-            font-size: 10px;
-            color: #64748b;
-            height: 20px;
-            vertical-align: top;
-        }
+                <!-- Data -->
+                <?php foreach ($ventas as $idx => $v): ?>
+                    <?php
+                    $alt = ($idx % 2 === 0) ? '' : 'Alt';
+                    $statusStyle = ($v->estado === 'Completada') ? 'sStatusGreen' . $alt : 'sStatusRed' . $alt;
+                    ?>
+                    <Row ss:Height="24">
+                        <Cell ss:StyleID="sDataLeftBold<?php echo $alt; ?>"><Data ss:Type="String">#<?php echo str_pad($v->id, 5, '0', STR_PAD_LEFT); ?></Data></Cell>
+                        <Cell ss:StyleID="sDataLeft<?php echo $alt; ?>"><Data ss:Type="String"><?php echo $v->fecha ? $v->fecha->format('d/m/Y H:i') : '—'; ?></Data></Cell>
+                        <Cell ss:StyleID="sDataLeftBold<?php echo $alt; ?>"><Data ss:Type="String"><?php echo htmlspecialchars(($v->cliente?->nombre ?? 'Venta Mostrador') . ' ' . ($v->cliente?->apellido ?? '')); ?></Data></Cell>
+                        <Cell ss:StyleID="sDataLeft<?php echo $alt; ?>"><Data ss:Type="String"><?php echo htmlspecialchars($v->metodo_pago); ?></Data></Cell>
+                        <Cell ss:StyleID="<?php echo $statusStyle; ?>"><Data ss:Type="String"><?php echo htmlspecialchars($v->estado); ?></Data></Cell>
+                        <Cell ss:StyleID="sDataRightBold<?php echo $alt; ?>"><Data ss:Type="String">$<?php echo number_format($v->total, 2); ?></Data></Cell>
+                    </Row>
+                <?php endforeach; ?>
 
-        /* KPIs Estilo Premium en Excel */
-        .kpi-cell {
-            background-color: #f8fafc;
-            border: 1px solid #cbd5e1;
-            text-align: center;
-            vertical-align: middle;
-            height: 40px;
-        }
+                <?php if ($ventas->isEmpty()): ?>
+                    <Row ss:Height="24">
+                        <Cell ss:MergeAcross="5" ss:StyleID="sDataCenter"><Data ss:Type="String">No se registraron ventas en este período.</Data></Cell>
+                    </Row>
+                <?php endif; ?>
 
-        .kpi-val {
-            font-size: 12px;
-            font-weight: bold;
-            color: #1e3a8a;
-        }
+                <Row ss:Height="28">
+                    <Cell ss:MergeAcross="4" ss:StyleID="sTotalLabel"><Data ss:Type="String">TOTAL ACUMULADO:</Data></Cell>
+                    <Cell ss:StyleID="sTotalValue"><Data ss:Type="String">$<?php echo number_format($kpi->total_periodo ?? 0, 2); ?></Data></Cell>
+                </Row>
+            </Table>
+        </Worksheet>
+    <?php endif; ?>
 
-        .kpi-lbl {
-            font-size: 8px;
-            color: #64748b;
-            text-transform: uppercase;
-            font-weight: bold;
-        }
+    <?php if ($incluirProductos): ?>
+        <Worksheet ss:Name="Prendas Mas Vendidas">
+            <Table ss:ExpandedColumnCount="6" x:FullColumns="1" x:FullRows="1" ss:DefaultRowHeight="22">
+                <Column ss:Width="90" />
+                <Column ss:Width="260" />
+                <Column ss:Width="120" />
+                <Column ss:Width="120" />
+                <Column ss:Width="120" />
+                <Column ss:Width="150" />
 
-        /* Títulos de Sección */
-        .section-title {
-            font-size: 12px;
-            font-weight: bold;
-            color: #2563eb;
-            height: 35px;
-            vertical-align: bottom;
-            border-bottom: 2px solid #e2e8f0;
-            padding-bottom: 4px;
-            text-transform: uppercase;
-        }
+                <Row ss:Height="40">
+                    <Cell ss:MergeAcross="3" ss:StyleID="sTitle"><Data ss:Type="String">Its Fashion</Data></Cell>
+                    <Cell ss:MergeAcross="1" ss:StyleID="sMetaRight"><Data ss:Type="String">Generado por: <?php echo htmlspecialchars((Auth::user()?->nombre ?? 'Admin') . ' ' . (Auth::user()?->apellido ?? 'General')); ?></Data></Cell>
+                </Row>
+                <Row ss:Height="25">
+                    <Cell ss:MergeAcross="3" ss:StyleID="sSubtitle"><Data ss:Type="String">Ranking de Prendas Más Vendidas</Data></Cell>
+                    <Cell ss:MergeAcross="1" ss:StyleID="sMetaRight"><Data ss:Type="String">Fecha: <?php echo now()->format('d/m/Y H:i'); ?></Data></Cell>
+                </Row>
+                <Row ss:Height="20">
+                    <Cell ss:MergeAcross="5" ss:StyleID="sMeta"><Data ss:Type="String">Rango de evaluación: <?php echo date('d/m/Y', strtotime($desde)); ?> al <?php echo date('d/m/Y', strtotime($hasta)); ?></Data></Cell>
+                </Row>
+                <Row ss:Height="15" />
+                <Row ss:Height="30">
+                    <Cell ss:MergeAcross="5" ss:StyleID="sSectionHeader"><Data ss:Type="String">Prendas con Mayor Rotación</Data></Cell>
+                </Row>
+                <Row ss:Height="10" />
 
-        /* Cabeceras de Tabla */
-        .th-header {
-            background-color: #f1f5f9;
-            color: #475569;
-            font-weight: bold;
-            border: 1px solid #cbd5e1;
-            height: 28px;
-            text-align: left;
-            padding-left: 8px;
-            text-transform: uppercase;
-            font-size: 9px;
-        }
+                <!-- Headers -->
+                <Row ss:Height="26">
+                    <Cell ss:StyleID="sTableHeaderCenter"><Data ss:Type="String">Posición</Data></Cell>
+                    <Cell ss:MergeAcross="1" ss:StyleID="sTableHeader"><Data ss:Type="String">Producto / Prenda</Data></Cell>
+                    <Cell ss:StyleID="sTableHeader"><Data ss:Type="String">Talla</Data></Cell>
+                    <Cell ss:StyleID="sTableHeader"><Data ss:Type="String">Color</Data></Cell>
+                    <Cell ss:StyleID="sTableHeaderRight"><Data ss:Type="String">Uds. Vendidas</Data></Cell>
+                </Row>
 
-        /* Celdas de Datos */
-        .td-data {
-            border: 1px solid #e2e8f0;
-            height: 26px;
-            color: #334155;
-            padding-left: 8px;
-            vertical-align: middle;
-        }
+                <!-- Data -->
+                <?php foreach ($productos as $idx => $p): ?>
+                    <?php $alt = ($idx % 2 === 0) ? '' : 'Alt'; ?>
+                    <Row ss:Height="24">
+                        <Cell ss:StyleID="sDataCenter<?php echo $alt; ?>"><Data ss:Type="String"><?php echo $idx + 1; ?></Data></Cell>
+                        <Cell ss:MergeAcross="1" ss:StyleID="sDataLeftBold<?php echo $alt; ?>"><Data ss:Type="String"><?php echo htmlspecialchars($p->nombre); ?></Data></Cell>
+                        <Cell ss:StyleID="sDataLeft<?php echo $alt; ?>"><Data ss:Type="String"><?php echo htmlspecialchars($p->talla); ?></Data></Cell>
+                        <Cell ss:StyleID="sDataLeft<?php echo $alt; ?>"><Data ss:Type="String"><?php echo htmlspecialchars($p->color); ?></Data></Cell>
+                        <Cell ss:StyleID="sDataRightBold<?php echo $alt; ?>"><Data ss:Type="String"><?php echo $p->vendidos; ?> uds</Data></Cell>
+                    </Row>
+                <?php endforeach; ?>
 
-        .tr-even td {
-            background-color: #f8fafc;
-        }
+                <?php if ($productos->isEmpty()): ?>
+                    <Row ss:Height="24">
+                        <Cell ss:MergeAcross="5" ss:StyleID="sDataCenter"><Data ss:Type="String">Sin datos de transacciones de prendas.</Data></Cell>
+                    </Row>
+                <?php endif; ?>
+            </Table>
+        </Worksheet>
+    <?php endif; ?>
 
-        .td-bold {
-            font-weight: bold;
-            color: #0f172a;
-        }
+    <?php if ($incluirInventario): ?>
+        <Worksheet ss:Name="Inventario General">
+            <Table ss:ExpandedColumnCount="6" x:FullColumns="1" x:FullRows="1" ss:DefaultRowHeight="22">
+                <Column ss:Width="260" />
+                <Column ss:Width="140" />
+                <Column ss:Width="120" />
+                <Column ss:Width="120" />
+                <Column ss:Width="120" />
+                <Column ss:Width="150" />
 
-        .td-red {
-            color: #b91c1c;
-            font-weight: bold;
-        }
+                <Row ss:Height="40">
+                    <Cell ss:MergeAcross="3" ss:StyleID="sTitle"><Data ss:Type="String">Its Fashion</Data></Cell>
+                    <Cell ss:MergeAcross="1" ss:StyleID="sMetaRight"><Data ss:Type="String">Generado por: <?php echo htmlspecialchars((Auth::user()?->nombre ?? 'Admin') . ' ' . (Auth::user()?->apellido ?? 'General')); ?></Data></Cell>
+                </Row>
+                <Row ss:Height="25">
+                    <Cell ss:MergeAcross="3" ss:StyleID="sSubtitle"><Data ss:Type="String">Reporte General de Inventario</Data></Cell>
+                    <Cell ss:MergeAcross="1" ss:StyleID="sMetaRight"><Data ss:Type="String">Fecha: <?php echo now()->format('d/m/Y H:i'); ?></Data></Cell>
+                </Row>
+                <Row ss:Height="20">
+                    <Cell ss:MergeAcross="5" ss:StyleID="sMeta"><Data ss:Type="String">Catálogo de prendas activas y stock</Data></Cell>
+                </Row>
+                <Row ss:Height="15" />
+                <Row ss:Height="30">
+                    <Cell ss:MergeAcross="5" ss:StyleID="sSectionHeader"><Data ss:Type="String">Estado Físico del Stock</Data></Cell>
+                </Row>
+                <Row ss:Height="10" />
 
-        .td-green {
-            color: #16a34a;
-            font-weight: bold;
-        }
+                <!-- Headers -->
+                <Row ss:Height="26">
+                    <Cell ss:MergeAcross="1" ss:StyleID="sTableHeader"><Data ss:Type="String">Producto</Data></Cell>
+                    <Cell ss:StyleID="sTableHeader"><Data ss:Type="String">Categoría</Data></Cell>
+                    <Cell ss:StyleID="sTableHeader"><Data ss:Type="String">Talla</Data></Cell>
+                    <Cell ss:StyleID="sTableHeader"><Data ss:Type="String">Color</Data></Cell>
+                    <Cell ss:StyleID="sTableHeaderRight"><Data ss:Type="String">Stock Disponible</Data></Cell>
+                </Row>
 
-        .text-right {
-            text-align: right;
-            padding-right: 8px;
-        }
-
-        .text-center {
-            text-align: center;
-        }
-    </style>
-    @verbatim
-    <!--[if gte mso 9]>
-    <xml>
-     <x:ExcelWorkbook>
-      <x:ExcelWorksheets>
-       <x:ExcelWorksheet>
-        <x:Name>Reporte Its Fashion</x:Name>
-        <x:WorksheetOptions>
-         <x:Selected />
-        </x:WorksheetOptions>
-       </x:ExcelWorksheet>
-      </x:ExcelWorksheets>
-     </x:ExcelWorkbook>
-    </xml>
-    <![endif]-->
-    @endverbatim
-</head>
-<body>
-
-    <!-- UNA SOLA TABLA UNIFICADA PARA ALINEACIÓN PERFECTA -->
-    <table width="800" style="table-layout: fixed;">
-        <!-- Definiendo anchos de columna estrictos para todo el reporte -->
-        <col width="110">
-        <col width="150">
-        <col width="200">
-        <col width="110">
-        <col width="110">
-        <col width="120">
-
-        <!-- CABECERA -->
-        <tr>
-            <td colspan="4" class="brand-title">Its <span>Fashion</span></td>
-            <td colspan="2" style="text-align: right; font-size: 9px; color: #64748b; vertical-align: bottom;">
-                <strong>Generado por:</strong> {{ Auth::user()->nombre }} {{ Auth::user()->apellido }}
-            </td>
-        </tr>
-        <tr>
-            <td colspan="4" class="main-subtitle">Consolidado de Actividad Comercial</td>
-            <td colspan="2" style="text-align: right; font-size: 9px; color: #64748b; vertical-align: middle;">
-                <strong>Fecha:</strong> {{ now()->format('d/m/Y H:i') }}
-            </td>
-        </tr>
-        <tr>
-            <td colspan="6" class="info-text">
-                Rango de evaluación: <strong>{{ date('d/m/Y', strtotime($desde)) }}</strong> al <strong>{{ date('d/m/Y', strtotime($hasta)) }}</strong>
-            </td>
-        </tr>
-        <tr><td colspan="6" style="height: 10px;"></td></tr>
-
-        <!-- VENTAS E INGRESOS -->
-        @if ($incluirVentas)
-            <tr>
-                <td colspan="6" class="section-title">Ventas e Ingresos</td>
-            </tr>
-            <tr><td colspan="6" style="height: 5px;"></td></tr>
-            
-            <!-- KPIs -->
-            <tr>
-                <td class="kpi-cell">
-                    <span class="kpi-val">${{ number_format($kpi->total_periodo ?? 0, 2) }}</span><br>
-                    <span class="kpi-lbl">Total Ingresos</span>
-                </td>
-                <td class="kpi-cell">
-                    <span class="kpi-val">{{ $kpi->transacciones ?? 0 }}</span><br>
-                    <span class="kpi-lbl">Ventas</span>
-                </td>
-                <td class="kpi-cell" colspan="2">
-                    <span class="kpi-val">${{ number_format($kpi->ticket_promedio ?? 0, 2) }}</span><br>
-                    <span class="kpi-lbl">Ticket Promedio</span>
-                </td>
-                <td class="kpi-cell" colspan="2">
-                    <span class="kpi-val">${{ number_format($kpi->efectivo ?? 0, 2) }}</span><br>
-                    <span class="kpi-lbl">Efectivo</span>
-                </td>
-            </tr>
-            <tr><td colspan="6" style="height: 10px;"></td></tr>
-
-            <!-- Encabezados de tabla -->
-            <tr>
-                <td class="th-header">ID Venta</td>
-                <td class="th-header">Fecha</td>
-                <td class="th-header">Cliente</td>
-                <td class="th-header">Método Pago</td>
-                <td class="th-header">Estado</td>
-                <td class="th-header text-right">Total</td>
-            </tr>
-            @forelse ($ventas as $idx => $v)
-                <tr class="{{ $idx % 2 === 0 ? '' : 'tr-even' }}">
-                    <td class="td-data font-mono" style="font-weight: bold; color: #475569;">#{{ str_pad($v->id, 5, '0', STR_PAD_LEFT) }}</td>
-                    <td class="td-data">{{ $v->fecha ? $v->fecha->format('d/m/Y H:i') : '—' }}</td>
-                    <td class="td-data td-bold">{{ $v->cliente->nombre ?? 'Venta Mostrador' }} {{ $v->cliente->apellido ?? '' }}</td>
-                    <td class="td-data">{{ $v->metodo_pago }}</td>
-                    <td class="td-data text-center"><span class="badge-txt {{ $v->estado === 'Completada' ? 'badge-success' : 'badge-danger' }}">{{ $v->estado }}</span></td>
-                    <td class="td-data td-bold text-right">${{ number_format($v->total, 2) }}</td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="6" class="td-data text-center" style="color: #94a3b8;">No se registraron ventas en este período.</td>
-                </tr>
-            @endforelse
-            <tr>
-                <td colspan="5" class="td-data td-bold text-right" style="background-color: #f8fafc; font-weight: bold;">TOTAL ACUMULADO:</td>
-                <td class="td-data td-bold text-right text-right" style="background-color: #f8fafc; color: #2563eb; font-weight: bold;">
-                    ${{ number_format($kpi->total_periodo ?? 0, 2) }}
-                </td>
-            </tr>
-            <tr><td colspan="6" style="height: 25px;"></td></tr>
-        @endif
-
-        <!-- PRODUCTOS MÁS VENDIDOS -->
-        @if ($incluirProductos)
-            <tr>
-                <td colspan="6" class="section-title">Ranking de Prendas Más Vendidas</td>
-            </tr>
-            <tr><td colspan="6" style="height: 5px;"></td></tr>
-            <tr>
-                <td class="th-header text-center">Posición</td>
-                <td class="th-header" colspan="2">Producto / Prenda</td>
-                <td class="th-header">Talla</td>
-                <td class="th-header">Color</td>
-                <td class="th-header text-right">Uds. Vendidas</td>
-            </tr>
-            @forelse ($productos as $idx => $p)
-                <tr class="{{ $idx % 2 === 0 ? '' : 'tr-even' }}">
-                    <td class="td-data text-center" style="font-weight: bold; color: #64748b;">{{ $idx + 1 }}</td>
-                    <td class="td-data td-bold" colspan="2" style="color: #0f172a;">{{ $p->nombre }}</td>
-                    <td class="td-data">{{ $p->talla }}</td>
-                    <td class="td-data">{{ $p->color }}</td>
-                    <td class="td-data td-bold text-right" style="color: #1e3a8a;">{{ $p->vendidos }} uds</td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="6" class="td-data text-center" style="color: #94a3b8;">Sin datos de transacciones de prendas.</td>
-                </tr>
-            @endforelse
-            <tr><td colspan="6" style="height: 25px;"></td></tr>
-        @endif
-
-        <!-- INVENTARIO COMPLETO -->
-        @if ($incluirInventario)
-            <tr>
-                <td colspan="6" class="section-title">Reporte General de Inventario</td>
-            </tr>
-            <tr><td colspan="6" style="height: 5px;"></td></tr>
-            <tr>
-                <td class="th-header" colspan="2">Producto</td>
-                <td class="th-header">Categoría</td>
-                <td class="th-header">Talla</td>
-                <td class="th-header">Color</td>
-                <td class="th-header text-right">Stock Disponible</td>
-            </tr>
-            @forelse ($inventario as $idx => $r)
-                @php
+                <!-- Data -->
+                <?php foreach ($inventario as $idx => $r): ?>
+                    <?php
+                    $alt = ($idx % 2 === 0) ? '' : 'Alt';
                     $isCritical = ($r->stock == 0) || ($r->stock <= ($r->stock_minimo ?? 0));
-                @endphp
-                <tr class="{{ $idx % 2 === 0 ? '' : 'tr-even' }}">
-                    <td class="td-data td-bold" colspan="2">{{ $r->nombre }}</td>
-                    <td class="td-data">{{ $r->categoria->nombre ?? '—' }}</td>
-                    <td class="td-data">{{ $r->talla }}</td>
-                    <td class="td-data">{{ $r->color }}</td>
-                    <td class="td-data text-right {{ $isCritical ? 'td-red' : 'td-bold' }}">{{ $r->stock }} uds</td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="6" class="td-data text-center" style="color: #94a3b8;">Catálogo de productos vacío.</td>
-                </tr>
-            @endforelse
-            <tr><td colspan="6" style="height: 25px;"></td></tr>
-        @endif
+                    $stockStyle = $isCritical ? 'sStatusRed' . $alt : 'sDataRightBold' . $alt;
+                    ?>
+                    <Row ss:Height="24">
+                        <Cell ss:MergeAcross="1" ss:StyleID="sDataLeftBold<?php echo $alt; ?>"><Data ss:Type="String"><?php echo htmlspecialchars($r->nombre); ?></Data></Cell>
+                        <Cell ss:StyleID="sDataLeft<?php echo $alt; ?>"><Data ss:Type="String"><?php echo htmlspecialchars($r->categoria?->nombre ?? '—'); ?></Data></Cell>
+                        <Cell ss:StyleID="sDataLeft<?php echo $alt; ?>"><Data ss:Type="String"><?php echo htmlspecialchars($r->talla); ?></Data></Cell>
+                        <Cell ss:StyleID="sDataLeft<?php echo $alt; ?>"><Data ss:Type="String"><?php echo htmlspecialchars($r->color); ?></Data></Cell>
+                        <Cell ss:StyleID="<?php echo $stockStyle; ?>"><Data ss:Type="String"><?php echo $r->stock; ?> uds</Data></Cell>
+                    </Row>
+                <?php endforeach; ?>
 
-        <!-- DEVOLUCIONES -->
-        @if ($incluirDevoluciones)
-            <tr>
-                <td colspan="6" class="section-title">Devoluciones y Reembolsos</td>
-            </tr>
-            <tr><td colspan="6" style="height: 5px;"></td></tr>
-            <tr>
-                <td class="th-header">ID Dev.</td>
-                <td class="th-header">ID Venta</td>
-                <td class="th-header">Fecha</td>
-                <td class="th-header" colspan="2">Cliente / Motivo</td>
-                <td class="th-header text-right">Monto Devuelto</td>
-            </tr>
-            @forelse ($devoluciones as $idx => $d)
-                <tr class="{{ $idx % 2 === 0 ? '' : 'tr-even' }}">
-                    <td class="td-data td-red font-mono" style="font-weight: bold;">DEV-#{{ str_pad($d->id, 3, '0', STR_PAD_LEFT) }}</td>
-                    <td class="td-data font-mono">#{{ str_pad($d->venta_id, 5, '0', STR_PAD_LEFT) }}</td>
-                    <td class="td-data">{{ $d->fecha ? $d->fecha->format('d/m/Y H:i') : '—' }}</td>
-                    <td class="td-data" colspan="2">
-                        <span class="td-bold">{{ $d->cliente_nombre }} {{ $d->cliente_apellido }}</span><br>
-                        <span style="color: #64748b; font-size: 10px; font-style: italic;">Motivo: "{{ $d->motivo }}"</span>
-                    </td>
-                    <td class="td-data td-red text-right">-${{ number_format($d->total_devolucion, 2) }}</td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="6" class="td-data text-center" style="color: #94a3b8;">No se registraron devoluciones.</td>
-                </tr>
-            @endforelse
-        @endif
-    </table>
+                <?php if ($inventario->isEmpty()): ?>
+                    <Row ss:Height="24">
+                        <Cell ss:MergeAcross="5" ss:StyleID="sDataCenter"><Data ss:Type="String">Catálogo de productos vacío.</Data></Cell>
+                    </Row>
+                <?php endif; ?>
+            </Table>
+        </Worksheet>
+    <?php endif; ?>
 
-</body>
-</html>
+    <?php if ($incluirDevoluciones): ?>
+        <Worksheet ss:Name="Devoluciones">
+            <Table ss:ExpandedColumnCount="6" x:FullColumns="1" x:FullRows="1" ss:DefaultRowHeight="22">
+                <Column ss:Width="110" />
+                <Column ss:Width="110" />
+                <Column ss:Width="160" />
+                <Column ss:Width="260" />
+                <Column ss:Width="140" />
+                <Column ss:Width="150" />
+
+                <Row ss:Height="40">
+                    <Cell ss:MergeAcross="3" ss:StyleID="sTitle"><Data ss:Type="String">Its Fashion</Data></Cell>
+                    <Cell ss:MergeAcross="1" ss:StyleID="sMetaRight"><Data ss:Type="String">Generado por: <?php echo htmlspecialchars((Auth::user()?->nombre ?? 'Admin') . ' ' . (Auth::user()?->apellido ?? 'General')); ?></Data></Cell>
+                </Row>
+                <Row ss:Height="25">
+                    <Cell ss:MergeAcross="3" ss:StyleID="sSubtitle"><Data ss:Type="String">Historial de Devoluciones y Reembolsos</Data></Cell>
+                    <Cell ss:MergeAcross="1" ss:StyleID="sMetaRight"><Data ss:Type="String">Fecha: <?php echo now()->format('d/m/Y H:i'); ?></Data></Cell>
+                </Row>
+                <Row ss:Height="20">
+                    <Cell ss:MergeAcross="5" ss:StyleID="sMeta"><Data ss:Type="String">Rango de evaluación: <?php echo date('d/m/Y', strtotime($desde)); ?> al <?php echo date('d/m/Y', strtotime($hasta)); ?></Data></Cell>
+                </Row>
+                <Row ss:Height="15" />
+                <Row ss:Height="30">
+                    <Cell ss:MergeAcross="5" ss:StyleID="sSectionHeader"><Data ss:Type="String">Devoluciones Solicitadas</Data></Cell>
+                </Row>
+                <Row ss:Height="10" />
+
+                <!-- Headers -->
+                <Row ss:Height="26">
+                    <Cell ss:StyleID="sTableHeader"><Data ss:Type="String">ID Dev.</Data></Cell>
+                    <Cell ss:StyleID="sTableHeader"><Data ss:Type="String">ID Venta</Data></Cell>
+                    <Cell ss:StyleID="sTableHeader"><Data ss:Type="String">Fecha</Data></Cell>
+                    <Cell ss:MergeAcross="1" ss:StyleID="sTableHeader"><Data ss:Type="String">Cliente / Motivo</Data></Cell>
+                    <Cell ss:StyleID="sTableHeaderRight"><Data ss:Type="String">Monto Devuelto</Data></Cell>
+                </Row>
+
+                <!-- Data -->
+                <?php foreach ($devoluciones as $idx => $d): ?>
+                    <?php $alt = ($idx % 2 === 0) ? '' : 'Alt'; ?>
+                    <Row ss:Height="32">
+                        <Cell ss:StyleID="sStatusRed<?php echo $alt; ?>"><Data ss:Type="String">DEV-#<?php echo str_pad($d->id, 3, '0', STR_PAD_LEFT); ?></Data></Cell>
+                        <Cell ss:StyleID="sDataLeft<?php echo $alt; ?>"><Data ss:Type="String">#<?php echo str_pad($d->venta_id, 5, '0', STR_PAD_LEFT); ?></Data></Cell>
+                        <Cell ss:StyleID="sDataLeft<?php echo $alt; ?>"><Data ss:Type="String"><?php echo $d->fecha ? $d->fecha->format('d/m/Y H:i') : '—'; ?></Data></Cell>
+                        <Cell ss:MergeAcross="1" ss:StyleID="sDataLeft<?php echo $alt; ?>"><Data ss:Type="String"><?php echo htmlspecialchars($d->cliente_nombre . ' ' . $d->cliente_apellido . ' - Motivo: "' . $d->motivo . '"'); ?></Data></Cell>
+                        <Cell ss:StyleID="sStatusRed<?php echo $alt; ?>"><Data ss:Type="String">-$<?php echo number_format($d->total_devolucion, 2); ?></Data></Cell>
+                    </Row>
+                <?php endforeach; ?>
+
+                <?php if ($devoluciones->isEmpty()): ?>
+                    <Row ss:Height="24">
+                        <Cell ss:MergeAcross="5" ss:StyleID="sDataCenter"><Data ss:Type="String">No se registraron devoluciones.</Data></Cell>
+                    </Row>
+                <?php endif; ?>
+            </Table>
+        </Worksheet>
+    <?php endif; ?>
+</Workbook>

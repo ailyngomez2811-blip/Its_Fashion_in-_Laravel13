@@ -9,9 +9,9 @@
     <div class="rounded-[2rem] p-6 mb-7 text-white flex items-center justify-between"
          style="background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%); box-shadow: 0 8px 24px rgba(37,99,235,.2);">
         <div>
-            <p class="text-purple-200 text-sm mb-0.5">Bienvenida de vuelta</p>
+            <p class="text-blue-100 text-sm mb-0.5">Bienvenida de vuelta</p>
             <h2 class="text-2xl font-bold font-serif">{{ auth()->user()->nombre }} {{ auth()->user()->apellido }}</h2>
-            <p class="text-purple-200 text-sm mt-1">{{ auth()->user()->email }}</p>
+            <p class="text-blue-100 text-sm mt-1">{{ auth()->user()->email }}</p>
         </div>
         <div class="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center border border-white/20 text-2xl font-bold text-white flex-shrink-0">
             {{ strtoupper(substr(auth()->user()->nombre, 0, 1) . substr(auth()->user()->apellido, 0, 1)) }}
@@ -25,7 +25,7 @@
         <div class="bg-white rounded-[1.5rem] p-5 border border-slate-100 shadow-sm hover:-translate-y-1 hover:shadow-md transition-all duration-300">
             <div class="flex items-center gap-3">
                 <div class="w-11 h-11 rounded-xl flex items-center justify-center text-white"
-                     style="background: linear-gradient(135deg,#2563eb,#7c3aed); box-shadow: 0 4px 12px rgba(37,99,235,.3);">
+                     style="background: linear-gradient(135deg,#2563eb,#1d4ed8); box-shadow: 0 4px 12px rgba(37,99,235,.3);">
                     <i class="fas fa-shopping-bag"></i>
                 </div>
                 <div>
@@ -69,7 +69,7 @@
         <a href="{{ route('ventas.index') }}"
            class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm flex items-center gap-4 hover:-translate-y-1 hover:shadow-md transition-all duration-300">
             <div class="w-12 h-12 rounded-xl flex items-center justify-center text-white flex-shrink-0"
-                 style="background: linear-gradient(135deg,#2563eb,#7c3aed); box-shadow: 0 4px 12px rgba(37,99,235,.3);">
+                 style="background: linear-gradient(135deg,#2563eb,#1d4ed8); box-shadow: 0 4px 12px rgba(37,99,235,.3);">
                 <i class="fas fa-shopping-bag text-lg"></i>
             </div>
             <div>
@@ -102,7 +102,7 @@
                     <h3 class="font-bold text-slate-800">Últimas compras</h3>
                     <p class="text-xs text-slate-500 mt-0.5">Tu historial reciente</p>
                 </div>
-                <a href="{{ route('ventas.index') }}" class="text-xs text-purple-600 hover:text-purple-800 font-semibold">
+                <a href="{{ route('ventas.index') }}" class="text-xs text-blue-600 hover:text-blue-800 font-semibold">
                     Ver todas
                 </a>
             </div>
@@ -140,7 +140,7 @@
                     <h3 class="font-bold text-slate-800">Mis devoluciones</h3>
                     <p class="text-xs text-slate-500 mt-0.5">Solicitudes recientes</p>
                 </div>
-                <a href="{{ route('devoluciones.index') }}" class="text-xs text-purple-600 hover:text-purple-800 font-semibold">
+                <a href="{{ route('devoluciones.index') }}" class="text-xs text-blue-600 hover:text-blue-800 font-semibold">
                     Ver todas
                 </a>
             </div>

@@ -20,7 +20,7 @@ class UsuarioController extends Controller
      */
     private function rolesAsignables()
     {
-        return Rol::whereIn('descripcion', ['Administrador', 'Empleado'])
+        return Rol::whereIn('descripcion', ['admin', 'vendedor', 'Administrador', 'Empleado'])
             ->orderBy('descripcion')
             ->get();
     }

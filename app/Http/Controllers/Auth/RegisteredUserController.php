@@ -35,7 +35,7 @@ class RegisteredUserController extends Controller
         ]);
 
         // ROL POR DEFECTO PARA REGISTRO PÚBLICO: CLIENTE
-        $rolCliente = Rol::where('descripcion', 'Cliente')->first();
+        $rolCliente = Rol::whereIn('descripcion', ['Cliente', 'cliente'])->first();
 
         $user = User::create([
             'nombre' => $request->nombre,

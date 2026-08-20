@@ -274,8 +274,13 @@
         });
 
         function cargarNotificaciones() {
-            fetch("{{ route('notificaciones.index') }}")
-                .then(r => r.json())
+            fetch("{{ route('notificaciones.index') }}", {
+                headers: { 'Accept': 'application/json' }
+            })
+                .then(r => {
+                    if (r.status === 401) return []; // Si no está autenticado, no procesamos nada
+                    return r.json();
+                })
                 .then(notis => {
                     const badge = document.getElementById('bell-badge');
                     const list = document.getElementById('notifications-list');

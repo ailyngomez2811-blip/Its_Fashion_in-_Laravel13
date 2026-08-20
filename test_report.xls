@@ -1,0 +1,417 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:o="urn:schemas-microsoft-com:office:office"
+ xmlns:x="urn:schemas-microsoft-com:office:excel"
+ xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:html="http://www.w3.org/TR/REC-html40">
+ <DocumentProperties xmlns="urn:schemas-microsoft-com:office:office">
+  <Author> </Author>
+  <Created>2026-08-13T11:12:53-05:00</Created>
+  <Version>16.00</Version>
+ </DocumentProperties>
+ <OfficeDocumentSettings xmlns="urn:schemas-microsoft-com:office:office">
+  <AllowPNG/>
+ </OfficeDocumentSettings>
+ <ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel">
+  <WindowHeight>10000</WindowHeight>
+  <WindowWidth>20000</WindowWidth>
+  <WindowTopX>0</WindowTopX>
+  <WindowTopY>0</WindowTopY>
+  <ProtectStructure>False</ProtectStructure>
+  <ProtectWindows>False</ProtectWindows>
+ </ExcelWorkbook>
+ <Styles>
+  <Style ss:ID="Default" ss:Name="Normal">
+   <Alignment ss:Vertical="Bottom"/>
+   <Borders/>
+   <Font ss:FontName="Calibri" x:Family="Swiss" ss:Size="11" ss:Color="#000000"/>
+   <Interior/>
+   <NumberFormat/>
+   <Protection/>
+  </Style>
+  <!-- Titulos -->
+  <Style ss:ID="sTitle">
+   <Alignment ss:Vertical="Bottom"/>
+   <Font ss:FontName="Calibri" ss:Size="22" ss:Bold="1" ss:Color="#2563eb"/>
+  </Style>
+  <Style ss:ID="sSubtitle">
+   <Alignment ss:Vertical="Center"/>
+   <Font ss:FontName="Calibri" ss:Size="14" ss:Bold="1" ss:Color="#1e293b"/>
+  </Style>
+  <Style ss:ID="sMeta">
+   <Alignment ss:Vertical="Top"/>
+   <Font ss:FontName="Calibri" ss:Size="11" ss:Color="#475569"/>
+  </Style>
+  <Style ss:ID="sMetaRight">
+   <Alignment ss:Horizontal="Right" ss:Vertical="Center"/>
+   <Font ss:FontName="Calibri" ss:Size="11" ss:Bold="1" ss:Color="#475569"/>
+  </Style>
+  <Style ss:ID="sSectionHeader">
+   <Alignment ss:Vertical="Bottom"/>
+   <Font ss:FontName="Calibri" ss:Size="13" ss:Bold="1" ss:Color="#2563eb"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="2" ss:Color="#475569"/>
+   </Borders>
+  </Style>
+  <!-- KPI Styles -->
+  <Style ss:ID="sKpiValue">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="All" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#475569"/>
+   </Borders>
+   <Font ss:FontName="Calibri" ss:Size="14" ss:Bold="1" ss:Color="#1e3a8a"/>
+   <Interior ss:Color="#f8fafc" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="sKpiTitle">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="All" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#475569"/>
+   </Borders>
+   <Font ss:FontName="Calibri" ss:Size="11" ss:Bold="1" ss:Color="#475569"/>
+   <Interior ss:Color="#f8fafc" ss:Pattern="Solid"/>
+  </Style>
+  <!-- Table Header -->
+  <Style ss:ID="sTableHeader">
+   <Alignment ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="All" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#475569"/>
+   </Borders>
+   <Font ss:FontName="Calibri" ss:Size="11" ss:Bold="1" ss:Color="#000000"/>
+   <Interior ss:Color="#f1f5f9" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="sTableHeaderRight">
+   <Alignment ss:Horizontal="Right" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="All" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#475569"/>
+   </Borders>
+   <Font ss:FontName="Calibri" ss:Size="11" ss:Bold="1" ss:Color="#000000"/>
+   <Interior ss:Color="#f1f5f9" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="sTableHeaderCenter">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="All" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#475569"/>
+   </Borders>
+   <Font ss:FontName="Calibri" ss:Size="11" ss:Bold="1" ss:Color="#000000"/>
+   <Interior ss:Color="#f1f5f9" ss:Pattern="Solid"/>
+  </Style>
+  <!-- Data Rows -->
+  <Style ss:ID="sDataLeft">
+   <Alignment ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="All" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#475569"/>
+   </Borders>
+   <Font ss:FontName="Calibri" ss:Size="11"/>
+  </Style>
+  <Style ss:ID="sDataLeftAlt">
+   <Alignment ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="All" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#475569"/>
+   </Borders>
+   <Font ss:FontName="Calibri" ss:Size="11"/>
+   <Interior ss:Color="#f8fafc" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="sDataLeftBold">
+   <Alignment ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="All" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#475569"/>
+   </Borders>
+   <Font ss:FontName="Calibri" ss:Size="11" ss:Bold="1"/>
+  </Style>
+  <Style ss:ID="sDataLeftBoldAlt">
+   <Alignment ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="All" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#475569"/>
+   </Borders>
+   <Font ss:FontName="Calibri" ss:Size="11" ss:Bold="1"/>
+   <Interior ss:Color="#f8fafc" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="sDataRight">
+   <Alignment ss:Horizontal="Right" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="All" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#475569"/>
+   </Borders>
+   <Font ss:FontName="Calibri" ss:Size="11"/>
+  </Style>
+  <Style ss:ID="sDataRightAlt">
+   <Alignment ss:Horizontal="Right" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="All" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#475569"/>
+   </Borders>
+   <Font ss:FontName="Calibri" ss:Size="11"/>
+   <Interior ss:Color="#f8fafc" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="sDataRightBold">
+   <Alignment ss:Horizontal="Right" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="All" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#475569"/>
+   </Borders>
+   <Font ss:FontName="Calibri" ss:Size="11" ss:Bold="1"/>
+  </Style>
+  <Style ss:ID="sDataRightBoldAlt">
+   <Alignment ss:Horizontal="Right" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="All" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#475569"/>
+   </Borders>
+   <Font ss:FontName="Calibri" ss:Size="11" ss:Bold="1"/>
+   <Interior ss:Color="#f8fafc" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="sDataCenter">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="All" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#475569"/>
+   </Borders>
+   <Font ss:FontName="Calibri" ss:Size="11"/>
+  </Style>
+  <Style ss:ID="sDataCenterAlt">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="All" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#475569"/>
+   </Borders>
+   <Font ss:FontName="Calibri" ss:Size="11"/>
+   <Interior ss:Color="#f8fafc" ss:Pattern="Solid"/>
+  </Style>
+  <!-- Statuses -->
+  <Style ss:ID="sStatusGreen">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="All" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#475569"/>
+   </Borders>
+   <Font ss:FontName="Calibri" ss:Size="11" ss:Bold="1" ss:Color="#16a34a"/>
+  </Style>
+  <Style ss:ID="sStatusGreenAlt">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="All" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#475569"/>
+   </Borders>
+   <Font ss:FontName="Calibri" ss:Size="11" ss:Bold="1" ss:Color="#16a34a"/>
+   <Interior ss:Color="#f8fafc" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="sStatusRed">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="All" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#475569"/>
+   </Borders>
+   <Font ss:FontName="Calibri" ss:Size="11" ss:Bold="1" ss:Color="#b91c1c"/>
+  </Style>
+  <Style ss:ID="sStatusRedAlt">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="All" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#475569"/>
+   </Borders>
+   <Font ss:FontName="Calibri" ss:Size="11" ss:Bold="1" ss:Color="#b91c1c"/>
+   <Interior ss:Color="#f8fafc" ss:Pattern="Solid"/>
+  </Style>
+  <!-- Totals -->
+  <Style ss:ID="sTotalLabel">
+   <Alignment ss:Horizontal="Right" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="All" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#475569"/>
+   </Borders>
+   <Font ss:FontName="Calibri" ss:Size="11" ss:Bold="1" ss:Color="#000000"/>
+   <Interior ss:Color="#f8fafc" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="sTotalValue">
+   <Alignment ss:Horizontal="Right" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="All" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#475569"/>
+   </Borders>
+   <Font ss:FontName="Calibri" ss:Size="11" ss:Bold="1" ss:Color="#2563eb"/>
+   <Interior ss:Color="#f8fafc" ss:Pattern="Solid"/>
+  </Style>
+ </Styles>
+
+  <Worksheet ss:Name="Ventas e Ingresos">
+  <Table ss:ExpandedColumnCount="6" x:FullColumns="1" x:FullRows="1" ss:DefaultRowHeight="22">
+   <Column ss:Width="110"/>
+   <Column ss:Width="160"/>
+   <Column ss:Width="200"/>
+   <Column ss:Width="160"/>
+   <Column ss:Width="120"/>
+   <Column ss:Width="140"/>
+   
+   <Row ss:Height="40">
+    <Cell ss:MergeAcross="3" ss:StyleID="sTitle"><Data ss:Type="String">Its Fashion</Data></Cell>
+    <Cell ss:MergeAcross="1" ss:StyleID="sMetaRight"><Data ss:Type="String">Generado por:  </Data></Cell>
+   </Row>
+   <Row ss:Height="25">
+    <Cell ss:MergeAcross="3" ss:StyleID="sSubtitle"><Data ss:Type="String">Consolidado de Actividad Comercial - Ventas</Data></Cell>
+    <Cell ss:MergeAcross="1" ss:StyleID="sMetaRight"><Data ss:Type="String">Fecha: 13/08/2026 11:12</Data></Cell>
+   </Row>
+   <Row ss:Height="20">
+    <Cell ss:MergeAcross="5" ss:StyleID="sMeta"><Data ss:Type="String">Rango de evaluación: 01/08/2026 al 31/08/2026</Data></Cell>
+   </Row>
+   <Row ss:Height="15"/>
+   <Row ss:Height="30">
+    <Cell ss:MergeAcross="5" ss:StyleID="sSectionHeader"><Data ss:Type="String">Resumen e Ingresos del Periodo</Data></Cell>
+   </Row>
+   <Row ss:Height="10"/>
+   
+   <!-- KPIs -->
+   <Row ss:Height="22">
+    <Cell ss:StyleID="sKpiTitle"><Data ss:Type="String">Total Ingresos</Data></Cell>
+    <Cell ss:StyleID="sKpiTitle"><Data ss:Type="String">Ventas</Data></Cell>
+    <Cell ss:MergeAcross="1" ss:StyleID="sKpiTitle"><Data ss:Type="String">Ticket Promedio</Data></Cell>
+    <Cell ss:MergeAcross="1" ss:StyleID="sKpiTitle"><Data ss:Type="String">Efectivo</Data></Cell>
+   </Row>
+   <Row ss:Height="28">
+    <Cell ss:StyleID="sKpiValue"><Data ss:Type="String">$1,000.00</Data></Cell>
+    <Cell ss:StyleID="sKpiValue"><Data ss:Type="String">5</Data></Cell>
+    <Cell ss:MergeAcross="1" ss:StyleID="sKpiValue"><Data ss:Type="String">$200.00</Data></Cell>
+    <Cell ss:MergeAcross="1" ss:StyleID="sKpiValue"><Data ss:Type="String">$500.00</Data></Cell>
+   </Row>
+   <Row ss:Height="15"/>
+   
+   <!-- Headers -->
+   <Row ss:Height="26">
+    <Cell ss:StyleID="sTableHeader"><Data ss:Type="String">ID Venta</Data></Cell>
+    <Cell ss:StyleID="sTableHeader"><Data ss:Type="String">Fecha</Data></Cell>
+    <Cell ss:StyleID="sTableHeader"><Data ss:Type="String">Cliente</Data></Cell>
+    <Cell ss:StyleID="sTableHeader"><Data ss:Type="String">Método Pago</Data></Cell>
+    <Cell ss:StyleID="sTableHeaderCenter"><Data ss:Type="String">Estado</Data></Cell>
+    <Cell ss:StyleID="sTableHeaderRight"><Data ss:Type="String">Total</Data></Cell>
+   </Row>
+   
+   <!-- Data -->
+      
+          <Row ss:Height="24">
+        <Cell ss:MergeAcross="5" ss:StyleID="sDataCenter"><Data ss:Type="String">No se registraron ventas en este período.</Data></Cell>
+       </Row>
+      
+   <Row ss:Height="28">
+    <Cell ss:MergeAcross="4" ss:StyleID="sTotalLabel"><Data ss:Type="String">TOTAL ACUMULADO:</Data></Cell>
+    <Cell ss:StyleID="sTotalValue"><Data ss:Type="String">$1,000.00</Data></Cell>
+   </Row>
+  </Table>
+ </Worksheet>
+ 
+  <Worksheet ss:Name="Prendas Mas Vendidas">
+  <Table ss:ExpandedColumnCount="6" x:FullColumns="1" x:FullRows="1" ss:DefaultRowHeight="22">
+   <Column ss:Width="90"/>
+   <Column ss:Width="260"/>
+   <Column ss:Width="120"/>
+   <Column ss:Width="120"/>
+   <Column ss:Width="120"/>
+   <Column ss:Width="150"/>
+   
+   <Row ss:Height="40">
+    <Cell ss:MergeAcross="3" ss:StyleID="sTitle"><Data ss:Type="String">Its Fashion</Data></Cell>
+    <Cell ss:MergeAcross="1" ss:StyleID="sMetaRight"><Data ss:Type="String">Generado por:  </Data></Cell>
+   </Row>
+   <Row ss:Height="25">
+    <Cell ss:MergeAcross="3" ss:StyleID="sSubtitle"><Data ss:Type="String">Ranking de Prendas Más Vendidas</Data></Cell>
+    <Cell ss:MergeAcross="1" ss:StyleID="sMetaRight"><Data ss:Type="String">Fecha: 13/08/2026 11:12</Data></Cell>
+   </Row>
+   <Row ss:Height="20">
+    <Cell ss:MergeAcross="5" ss:StyleID="sMeta"><Data ss:Type="String">Rango de evaluación: 01/08/2026 al 31/08/2026</Data></Cell>
+   </Row>
+   <Row ss:Height="15"/>
+   <Row ss:Height="30">
+    <Cell ss:MergeAcross="5" ss:StyleID="sSectionHeader"><Data ss:Type="String">Prendas con Mayor Rotación</Data></Cell>
+   </Row>
+   <Row ss:Height="10"/>
+   
+   <!-- Headers -->
+   <Row ss:Height="26">
+    <Cell ss:StyleID="sTableHeaderCenter"><Data ss:Type="String">Posición</Data></Cell>
+    <Cell ss:MergeAcross="1" ss:StyleID="sTableHeader"><Data ss:Type="String">Producto / Prenda</Data></Cell>
+    <Cell ss:StyleID="sTableHeader"><Data ss:Type="String">Talla</Data></Cell>
+    <Cell ss:StyleID="sTableHeader"><Data ss:Type="String">Color</Data></Cell>
+    <Cell ss:StyleID="sTableHeaderRight"><Data ss:Type="String">Uds. Vendidas</Data></Cell>
+   </Row>
+   
+   <!-- Data -->
+      
+          <Row ss:Height="24">
+        <Cell ss:MergeAcross="5" ss:StyleID="sDataCenter"><Data ss:Type="String">Sin datos de transacciones de prendas.</Data></Cell>
+       </Row>
+     </Table>
+ </Worksheet>
+ 
+  <Worksheet ss:Name="Inventario General">
+  <Table ss:ExpandedColumnCount="6" x:FullColumns="1" x:FullRows="1" ss:DefaultRowHeight="22">
+   <Column ss:Width="260"/>
+   <Column ss:Width="140"/>
+   <Column ss:Width="120"/>
+   <Column ss:Width="120"/>
+   <Column ss:Width="120"/>
+   <Column ss:Width="150"/>
+   
+   <Row ss:Height="40">
+    <Cell ss:MergeAcross="3" ss:StyleID="sTitle"><Data ss:Type="String">Its Fashion</Data></Cell>
+    <Cell ss:MergeAcross="1" ss:StyleID="sMetaRight"><Data ss:Type="String">Generado por:  </Data></Cell>
+   </Row>
+   <Row ss:Height="25">
+    <Cell ss:MergeAcross="3" ss:StyleID="sSubtitle"><Data ss:Type="String">Reporte General de Inventario</Data></Cell>
+    <Cell ss:MergeAcross="1" ss:StyleID="sMetaRight"><Data ss:Type="String">Fecha: 13/08/2026 11:12</Data></Cell>
+   </Row>
+   <Row ss:Height="20">
+    <Cell ss:MergeAcross="5" ss:StyleID="sMeta"><Data ss:Type="String">Catálogo de prendas activas y stock</Data></Cell>
+   </Row>
+   <Row ss:Height="15"/>
+   <Row ss:Height="30">
+    <Cell ss:MergeAcross="5" ss:StyleID="sSectionHeader"><Data ss:Type="String">Estado Físico del Stock</Data></Cell>
+   </Row>
+   <Row ss:Height="10"/>
+   
+   <!-- Headers -->
+   <Row ss:Height="26">
+    <Cell ss:MergeAcross="1" ss:StyleID="sTableHeader"><Data ss:Type="String">Producto</Data></Cell>
+    <Cell ss:StyleID="sTableHeader"><Data ss:Type="String">Categoría</Data></Cell>
+    <Cell ss:StyleID="sTableHeader"><Data ss:Type="String">Talla</Data></Cell>
+    <Cell ss:StyleID="sTableHeader"><Data ss:Type="String">Color</Data></Cell>
+    <Cell ss:StyleID="sTableHeaderRight"><Data ss:Type="String">Stock Disponible</Data></Cell>
+   </Row>
+   
+   <!-- Data -->
+      
+          <Row ss:Height="24">
+        <Cell ss:MergeAcross="5" ss:StyleID="sDataCenter"><Data ss:Type="String">Catálogo de productos vacío.</Data></Cell>
+       </Row>
+     </Table>
+ </Worksheet>
+ 
+  <Worksheet ss:Name="Devoluciones">
+  <Table ss:ExpandedColumnCount="6" x:FullColumns="1" x:FullRows="1" ss:DefaultRowHeight="22">
+   <Column ss:Width="110"/>
+   <Column ss:Width="110"/>
+   <Column ss:Width="160"/>
+   <Column ss:Width="260"/>
+   <Column ss:Width="140"/>
+   <Column ss:Width="150"/>
+   
+   <Row ss:Height="40">
+    <Cell ss:MergeAcross="3" ss:StyleID="sTitle"><Data ss:Type="String">Its Fashion</Data></Cell>
+    <Cell ss:MergeAcross="1" ss:StyleID="sMetaRight"><Data ss:Type="String">Generado por:  </Data></Cell>
+   </Row>
+   <Row ss:Height="25">
+    <Cell ss:MergeAcross="3" ss:StyleID="sSubtitle"><Data ss:Type="String">Historial de Devoluciones y Reembolsos</Data></Cell>
+    <Cell ss:MergeAcross="1" ss:StyleID="sMetaRight"><Data ss:Type="String">Fecha: 13/08/2026 11:12</Data></Cell>
+   </Row>
+   <Row ss:Height="20">
+    <Cell ss:MergeAcross="5" ss:StyleID="sMeta"><Data ss:Type="String">Rango de evaluación: 01/08/2026 al 31/08/2026</Data></Cell>
+   </Row>
+   <Row ss:Height="15"/>
+   <Row ss:Height="30">
+    <Cell ss:MergeAcross="5" ss:StyleID="sSectionHeader"><Data ss:Type="String">Devoluciones Solicitadas</Data></Cell>
+   </Row>
+   <Row ss:Height="10"/>
+   
+   <!-- Headers -->
+   <Row ss:Height="26">
+    <Cell ss:StyleID="sTableHeader"><Data ss:Type="String">ID Dev.</Data></Cell>
+    <Cell ss:StyleID="sTableHeader"><Data ss:Type="String">ID Venta</Data></Cell>
+    <Cell ss:StyleID="sTableHeader"><Data ss:Type="String">Fecha</Data></Cell>
+    <Cell ss:MergeAcross="1" ss:StyleID="sTableHeader"><Data ss:Type="String">Cliente / Motivo</Data></Cell>
+    <Cell ss:StyleID="sTableHeaderRight"><Data ss:Type="String">Monto Devuelto</Data></Cell>
+   </Row>
+   
+   <!-- Data -->
+      
+          <Row ss:Height="24">
+        <Cell ss:MergeAcross="5" ss:StyleID="sDataCenter"><Data ss:Type="String">No se registraron devoluciones.</Data></Cell>
+       </Row>
+     </Table>
+ </Worksheet>
+ </Workbook>

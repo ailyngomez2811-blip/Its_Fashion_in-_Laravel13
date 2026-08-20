@@ -28,8 +28,13 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        // La ruta "dashboard" decide internamente qué vista mostrar según el rol.
-        return redirect()->intended(route('dashboard', absolute: false));
+        // Evitamos que peticiones AJAX de fondo (como notificaciones) capturen la redirección de login
+        $intendedUrl = session()->pull('url.intended', route('dashboard'));
+        if (str_contains($intendedUrl, '/notificaciones')) {
+            $intendedUrl = route('dashboard');
+        }
+
+        return redirect()->to($intendedUrl);
     }
 
     /**

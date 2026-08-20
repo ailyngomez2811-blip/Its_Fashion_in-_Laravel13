@@ -452,9 +452,17 @@
             <div>
                 <p class="text-sm font-semibold text-slate-700 mb-3">¿Qué deseas incluir en el reporte?</p>
                 <div class="grid grid-cols-2 gap-3">
+                    @php
+                        $mapVals = [
+                            'Ventas' => 'Ventas',
+                            'Inventario' => 'Inventario',
+                            'Productos más vendidos' => 'Productos_mas_vendidos',
+                            'Devoluciones' => 'Devoluciones'
+                        ];
+                    @endphp
                     @foreach (['Ventas', 'Inventario', 'Productos más vendidos', 'Devoluciones'] as $r)
                         @php
-                            $val = str_replace(' ', '_', $r);
+                            $val = $mapVals[$r] ?? str_replace(' ', '_', $r);
                         @endphp
                         <label class="flex items-center gap-3 p-3 rounded-xl border-2 border-slate-100 hover:border-blue-300 cursor-pointer transition bg-slate-50 hover:bg-white select-none">
                             <input type="checkbox" value="{{ $val }}" class="accent-blue-600 report-cb" checked>
